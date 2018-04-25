@@ -550,7 +550,7 @@ Game.prototype = {
     // else{
         
     //}
-    var handom =Math.floor(5*Math.random())-1
+    var handom =Math.floor(6*Math.random())-1
     if(this.cubeStat.heightBiasCon > 1){
         this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
         this.cubeStat.heightBiasRec2 = handom
@@ -559,54 +559,312 @@ Game.prototype = {
     
     var geometry = new THREE.CubeGeometry(this.config.cubeWidth, this.config.cubeHeight+this.cubeStat.heightBiasRec2, this.config.cubeDeep)
     //var material = new THREE.MeshLambertMaterial({ color: this.config.cubeColor })
-        var random =Math.floor(10*Math.random())
-        switch(random)  
-        {
-          case 0:var texture = THREE.ImageUtils.loadTexture('guanghuanew.png');break;
-          case 1:var texture = THREE.ImageUtils.loadTexture('oldgatew.png');break;
-          case 2:var texture = THREE.ImageUtils.loadTexture('familymart.png');break;
-          case 3:var texture = THREE.ImageUtils.loadTexture('danyuanw.png');break;
-          case 4:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break; 
-          case 5:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;       
-          case 6:var texture = THREE.ImageUtils.loadTexture('guanghuanew.png');break; 
-          case 7:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;    
-          case 8:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;   
-          case 9:var texture = THREE.ImageUtils.loadTexture('danyuanw.png');break; 
-          default:var texture = THREE.ImageUtils.loadTexture('oldgate.png');break;
-        }
-           // texture.generateMipmaps = false; 
+    switch(this.cubeStat.heightBiasRec2){
+        case -1:
+            var random =Math.floor(10*Math.random())
+            switch(random)  
+            {
+                case 0:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;
+                case 1:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;
+                case 2:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;
+                case 3:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;
+                case 4:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break; 
+                case 5:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;       
+                case 6:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break; 
+                case 7:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;    
+                case 8:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;   
+                case 9:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break; 
+                default:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;
+            }
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
             texture.wrapS=1001;
             texture.wrapT=1001;
-        var material = new THREE.MeshBasicMaterial({map:texture,transparent:true})
-        var m1 = [new THREE.Vector2(0, .333), new THREE.Vector2(.666, .333), new THREE.Vector2(.666, 1), new THREE.Vector2(0, 1)];
-        var m2 = [new THREE.Vector2(.666, .333), new THREE.Vector2(1, .333), new THREE.Vector2(1, 1), new THREE.Vector2(.666, 1)];
-        var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.666, 0), new THREE.Vector2(.666, .333), new THREE.Vector2(0, .333)];
-        //var texture=new THREE.TextureLoader().load('bag.png')
-        //var material  = new THREE.MeshBasicMaterial({map:texture})
-        //var material = new THREE.MeshPhongMaterial( { map: THREE.TextureLoader('http://wow.techbrood.com/uploads/1702/crate.jpg'),transparent:true } )
-        geometry.faceVertexUvs[0] = [];
-        geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
-        geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
-          
-        geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
-        geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
-          
-        geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
-        geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
-          
-        geometry.faceVertexUvs[0][10] = [ m1[0], m1[1], m1[3] ];
-        geometry.faceVertexUvs[0][11] = [ m1[1], m1[2], m1[3] ];
-          
-        geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
-        geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
-          
-        geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
-        geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
-    var mesh = new THREE.Mesh(geometry, material)
-    mesh.castShadow=true
-    mesh.receiveShadow = true
+            var material = new THREE.MeshBasicMaterial({map:texture,transparent:true})
+            var m1 = [new THREE.Vector2(0, .2), new THREE.Vector2(.8, .2), new THREE.Vector2(.8, 1), new THREE.Vector2(0, 1)];
+            var m2 = [new THREE.Vector2(.8, .2), new THREE.Vector2(1, .2), new THREE.Vector2(1, 1), new THREE.Vector2(.8, 1)];
+            var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.8, 0), new THREE.Vector2(.8, .2), new THREE.Vector2(0, .2)];
+
+            geometry.faceVertexUvs[0] = [];
+            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
+            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
+            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
+            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
+            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
+            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
+            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
+            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
+            
+            var mesh = new THREE.Mesh(geometry, material)
+            mesh.castShadow=true
+            mesh.receiveShadow = true
+            break;
+        case 0:
+            var random =Math.floor(10*Math.random())
+            switch(random)  
+            {
+                case 0:var texture = THREE.ImageUtils.loadTexture('dy_2.png');break;
+                case 1:var texture = THREE.ImageUtils.loadTexture('dy_2.png');break;
+                case 2:var texture = THREE.ImageUtils.loadTexture('qj_2.png');break;
+                case 3:var texture = THREE.ImageUtils.loadTexture('qj_2.png');break;
+                case 4:var texture = THREE.ImageUtils.loadTexture('xsg_2.jpg');break; 
+                case 5:var texture = THREE.ImageUtils.loadTexture('xsg_2.jpg');break;       
+                case 6:var texture = THREE.ImageUtils.loadTexture('xxm_2.jpg');break; 
+                case 7:var texture = THREE.ImageUtils.loadTexture('xxm_2.jpg');break;    
+                case 8:var texture = THREE.ImageUtils.loadTexture('lxm_2.png');break;   
+                case 9:var texture = THREE.ImageUtils.loadTexture('lxm_2.png');break; 
+                default:var texture = THREE.ImageUtils.loadTexture('lxm_2.png');break;
+            }
+            texture.magFilter = THREE.LinearFilter; 
+            texture.minFilter = THREE.LinearFilter;
+            texture.wrapS=1001;
+            texture.wrapT=1001;
+            var material = new THREE.MeshBasicMaterial({map:texture,transparent:true})
+            var m1 = [new THREE.Vector2(0, .333), new THREE.Vector2(.666, .333), new THREE.Vector2(.666, 1), new THREE.Vector2(0, 1)];
+            var m2 = [new THREE.Vector2(.666, .333), new THREE.Vector2(1, .333), new THREE.Vector2(1, 1), new THREE.Vector2(.666, 1)];
+            var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.666, 0), new THREE.Vector2(.666, .333), new THREE.Vector2(0, .333)];
+
+            geometry.faceVertexUvs[0] = [];
+            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
+            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
+            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
+            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
+            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
+            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
+            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
+            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
+            
+            var mesh = new THREE.Mesh(geometry, material)
+            mesh.castShadow=true
+            mesh.receiveShadow = true
+            break;
+        case 1:
+            var random =Math.floor(10*Math.random())
+            switch(random)  
+            {
+                case 0:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;
+                case 1:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;
+                case 2:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;
+                case 3:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;
+                case 4:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break; 
+                case 5:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;       
+                case 6:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break; 
+                case 7:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;    
+                case 8:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;   
+                case 9:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break; 
+                default:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;
+            }
+            texture.magFilter = THREE.LinearFilter; 
+            texture.minFilter = THREE.LinearFilter;
+            texture.wrapS=1001;
+            texture.wrapT=1001;
+            var material = new THREE.MeshBasicMaterial({map:texture,transparent:true})
+            var m1 = [new THREE.Vector2(0, .429), new THREE.Vector2(.571, .429), new THREE.Vector2(.571, 1), new THREE.Vector2(0, 1)];
+            var m2 = [new THREE.Vector2(.571, .429), new THREE.Vector2(1, .429), new THREE.Vector2(1, 1), new THREE.Vector2(.571, 1)];
+            var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.571, 0), new THREE.Vector2(.571, .429), new THREE.Vector2(0, .429)];
+
+            geometry.faceVertexUvs[0] = [];
+            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
+            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
+            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
+            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
+            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
+            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
+            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
+            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
+            
+            var mesh = new THREE.Mesh(geometry, material)
+            mesh.castShadow=true
+            mesh.receiveShadow = true
+            break;
+        case 2:
+            var random =Math.floor(10*Math.random())
+            switch(random)  
+            {
+                case 0:var texture = THREE.ImageUtils.loadTexture('tb1_4.jpg');break;
+                case 1:var texture = THREE.ImageUtils.loadTexture('tb1_4.jpg');break;
+                case 2:var texture = THREE.ImageUtils.loadTexture('tb2_4.jpg');break;
+                case 3:var texture = THREE.ImageUtils.loadTexture('tb2_4.jpg');break;
+                case 4:var texture = THREE.ImageUtils.loadTexture('tb3_4.jpg');break; 
+                case 5:var texture = THREE.ImageUtils.loadTexture('tb3_4.jpg');break;       
+                case 6:var texture = THREE.ImageUtils.loadTexture('tb4_4.jpg');break; 
+                case 7:var texture = THREE.ImageUtils.loadTexture('tb4_4.jpg');break;    
+                case 8:var texture = THREE.ImageUtils.loadTexture('tb5_4.jpg');break;   
+                case 9:var texture = THREE.ImageUtils.loadTexture('tb6_4.jpg');break; 
+                default:var texture = THREE.ImageUtils.loadTexture('tb6_4.jpg');break;
+            }
+            texture.magFilter = THREE.LinearFilter; 
+            texture.minFilter = THREE.LinearFilter;
+            texture.wrapS=1001;
+            texture.wrapT=1001;
+            var material = new THREE.MeshBasicMaterial({map:texture,transparent:true})
+            var m1 = [new THREE.Vector2(0, .5), new THREE.Vector2(.5, .5), new THREE.Vector2(.5, 1), new THREE.Vector2(0, 1)];
+            var m2 = [new THREE.Vector2(.5, .5), new THREE.Vector2(1, .5), new THREE.Vector2(1, 1), new THREE.Vector2(.5, 1)];
+            var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.5, 0), new THREE.Vector2(.5, .5), new THREE.Vector2(0, .5)];
+
+            geometry.faceVertexUvs[0] = [];
+            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
+            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
+            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
+            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
+            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
+            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
+            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
+            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
+            
+            var mesh = new THREE.Mesh(geometry, material)
+            mesh.castShadow=true
+            mesh.receiveShadow = true
+            break;
+        case 3:
+            var random =Math.floor(10*Math.random())
+            switch(random)  
+            {
+                case 0:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;
+                case 1:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;
+                case 2:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;
+                case 3:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;
+                case 4:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break; 
+                case 5:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;       
+                case 6:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break; 
+                case 7:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;    
+                case 8:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;   
+                case 9:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break; 
+                default:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;
+            }
+            texture.magFilter = THREE.LinearFilter; 
+            texture.minFilter = THREE.LinearFilter;
+            texture.wrapS=1001;
+            texture.wrapT=1001;
+            var material = new THREE.MeshBasicMaterial({map:texture,transparent:true})
+            var m1 = [new THREE.Vector2(0, .555), new THREE.Vector2(.444, .555), new THREE.Vector2(.444, 1), new THREE.Vector2(0, 1)];
+            var m2 = [new THREE.Vector2(.444, .555), new THREE.Vector2(1, .555), new THREE.Vector2(1, 1), new THREE.Vector2(.444, 1)];
+            var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.444, 0), new THREE.Vector2(.444, .555), new THREE.Vector2(0, .555)];
+
+            geometry.faceVertexUvs[0] = [];
+            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
+            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
+            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
+            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
+            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
+            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
+            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
+            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
+            
+            var mesh = new THREE.Mesh(geometry, material)
+            mesh.castShadow=true
+            mesh.receiveShadow = true
+            break;
+        case 4:
+            var random =Math.floor(10*Math.random())
+            switch(random)  
+            {
+                case 0:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break;
+                case 1:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break;
+                case 2:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break;
+                case 3:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break;
+                case 4:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break; 
+                case 5:var texture = THREE.ImageUtils.loadTexture('wkl_6.jpg');break;       
+                case 6:var texture = THREE.ImageUtils.loadTexture('wkl_6.jpg');break; 
+                case 7:var texture = THREE.ImageUtils.loadTexture('wkl_6.jpg');break;    
+                case 8:var texture = THREE.ImageUtils.loadTexture('wkl_6.jpg');break;   
+                case 9:var texture = THREE.ImageUtils.loadTexture('wkl_6.jpg');break; 
+                default:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break;
+            }
+            texture.magFilter = THREE.LinearFilter; 
+            texture.minFilter = THREE.LinearFilter;
+            texture.wrapS=1001;
+            texture.wrapT=1001;
+            var material = new THREE.MeshBasicMaterial({map:texture,transparent:true})
+            var m1 = [new THREE.Vector2(0, .6), new THREE.Vector2(.4, .6), new THREE.Vector2(.4, 1), new THREE.Vector2(0, 1)];
+            var m2 = [new THREE.Vector2(.4, .6), new THREE.Vector2(1, .6), new THREE.Vector2(1, 1), new THREE.Vector2(.4, 1)];
+            var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.4, 0), new THREE.Vector2(.4, .6), new THREE.Vector2(0, .6)];
+
+            geometry.faceVertexUvs[0] = [];
+            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
+            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
+            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
+            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
+            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
+            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
+            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
+            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
+            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
+            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
+            
+            var mesh = new THREE.Mesh(geometry, material)
+            mesh.castShadow=true
+            mesh.receiveShadow = true
+            break;
+    }
+        // var random =Math.floor(10*Math.random())
+        // switch(random)  
+        // {
+          // case 0:var texture = THREE.ImageUtils.loadTexture('guanghuanew.png');break;
+          // case 1:var texture = THREE.ImageUtils.loadTexture('oldgatew.png');break;
+          // case 2:var texture = THREE.ImageUtils.loadTexture('familymart.png');break;
+          // case 3:var texture = THREE.ImageUtils.loadTexture('danyuanw.png');break;
+          // case 4:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break; 
+          // case 5:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;       
+          // case 6:var texture = THREE.ImageUtils.loadTexture('guanghuanew.png');break; 
+          // case 7:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;    
+          // case 8:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;   
+          // case 9:var texture = THREE.ImageUtils.loadTexture('danyuanw.png');break; 
+          // default:var texture = THREE.ImageUtils.loadTexture('oldgate.png');break;
+        // }
+           // texture.generateMipmaps = false; 
+    // texture.magFilter = THREE.LinearFilter; 
+    // texture.minFilter = THREE.LinearFilter;
+    // texture.wrapS=1001;
+    // texture.wrapT=1001;
+    // var material = new THREE.MeshBasicMaterial({map:texture,transparent:true})
+    // var m1 = [new THREE.Vector2(0, .333), new THREE.Vector2(.666, .333), new THREE.Vector2(.666, 1), new THREE.Vector2(0, 1)];
+    // var m2 = [new THREE.Vector2(.666, .333), new THREE.Vector2(1, .333), new THREE.Vector2(1, 1), new THREE.Vector2(.666, 1)];
+    // var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.666, 0), new THREE.Vector2(.666, .333), new THREE.Vector2(0, .333)];
+
+    // geometry.faceVertexUvs[0] = [];
+    // geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
+    // geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
+    // geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
+    // geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
+    // geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
+    // geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
+    // geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
+    // geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
+    // geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
+    // geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
+    // geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
+    // geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
+    
+    // var mesh = new THREE.Mesh(geometry, material)
+    // mesh.castShadow=true
+    // mesh.receiveShadow = true
+    
+    //var texture=new THREE.TextureLoader().load('bag.png')
+    //var material  = new THREE.MeshBasicMaterial({map:texture})
+    //var material = new THREE.MeshPhongMaterial( { map: THREE.TextureLoader('http://wow.techbrood.com/uploads/1702/crate.jpg'),transparent:true } )
     
     
     if (this.cubes.length) {
@@ -625,7 +883,7 @@ Game.prototype = {
     }
     this.cubes.push(mesh)
     // 当方块数大于6时，删除前面的方块，因为不会出现在画布中
-    if (this.cubes.length > 6) {
+    if (this.cubes.length > 4) {
       this.scene.remove(this.cubes.shift())
     }
     this.scene.add(mesh)
