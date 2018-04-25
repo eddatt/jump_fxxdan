@@ -64,7 +64,7 @@ button.restart:hover{
   display: block;
   font-size: 16px;
   line-height: 28px;
-  color: #ffffff;
+  color: #000;
   text-decoration: none;
 }
 a.title{
@@ -73,6 +73,6 @@ a.title{
 }
 .score-gaming{
 	margin-top: 10px;
-	color: rgba(255,255,255,1);
+	color: rgba(0,0,0,1);
 	font-size: 16px;
 }

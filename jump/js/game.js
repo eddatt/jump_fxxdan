@@ -123,7 +123,7 @@ Game.prototype = {
     this._createJumper()
     this._updateCamera()
     //重新开始音效
-    var music1 = document.getElementById('aud1')
+    var music1 = document.getElementById('aud_restart')
     music1.play()
   },
   // 游戏成功的执行函数, 外部传入
@@ -171,9 +171,9 @@ Game.prototype = {
       self.jumperStat.ySpeed += 0.03
       self.jumperStat.tRecord +=1
       self._render(self.scene, self.camera)
-        //按下鼠标音效
-        var music = document.getElementById('aud')
-        music.play()
+      //按下鼠标音效
+      var music = document.getElementById('aud_mousedown')
+      music.play()
       requestAnimationFrame(function() {
         self._handleMousedown()
       })
@@ -182,6 +182,12 @@ Game.prototype = {
   // 鼠标松开或触摸结束绑定的函数
   _handleMouseup: function() {
     var self = this
+    // if (self.jumperStat.xSpeed < 0.1) {
+    //   console.log("return")
+    //   self.jumperStat.ready = true
+    //   return
+    // }
+    // console.log("_handleMouseup, xSpeed:"+self.jumperStat.xSpeed+", ySpeed:"+self.jumperStat.ySpeed)
     // 标记鼠标已经松开
     self.jumperStat.ready = true
     // 判断jumper是在方块水平面之上，是的话说明需要继续运动
@@ -224,7 +230,7 @@ Game.prototype = {
         // 每一次的变化，渲染器都要重新渲染，才能看到渲染效果
         self._render(self.scene, self.camera)
           //抬起鼠标，音效停止
-          var music = document.getElementById('aud')
+          var music = document.getElementById('aud_mousedown')
           music.pause()
           music.currentTime = 0
         requestAnimationFrame(function() {
@@ -289,7 +295,7 @@ Game.prototype = {
       if (self.falledStat.location === 1) {
         // 掉落成功，进入下一步
         self.score++
-          self._createCube()
+        self._createCube()
         self._updateCamera()
 
         if (self.successCallback) {
@@ -298,9 +304,9 @@ Game.prototype = {
       } else {
         // 掉落失败，进入失败动画
         self._falling()
-          //掉落音效
-          var music2 = document.getElementById('aud2')
-          music2.play()
+        //掉落音效
+        var music2 = document.getElementById('aud_failed')
+        music2.play()
       }
     }
   },
@@ -320,22 +326,22 @@ Game.prototype = {
       rotateAxis = 'x'
       rotateAdd = self.jumper.rotation[rotateAxis] - 0.1
       rotateTo = self.jumper.rotation[rotateAxis] > -Math.PI / 2
-      self.jumper.geometry.translate.z = offset
+      // self.jumper.geometry.translate.z = offset
     } else if (dir === 'rightBottom') {
       rotateAxis = 'x'
       rotateAdd = self.jumper.rotation[rotateAxis] + 0.1
       rotateTo = self.jumper.rotation[rotateAxis] < Math.PI / 2
-      self.jumper.geometry.translate.z = -offset
+      // self.jumper.geometry.translate.z = -offset
     } else if (dir === 'leftBottom') {
       rotateAxis = 'z'
       rotateAdd = self.jumper.rotation[rotateAxis] - 0.1
       rotateTo = self.jumper.rotation[rotateAxis] > -Math.PI / 2
-      self.jumper.geometry.translate.x = -offset
+      // self.jumper.geometry.translate.x = -offset
     } else if (dir === 'leftTop') {
       rotateAxis = 'z'
       rotateAdd = self.jumper.rotation[rotateAxis] + 0.1
       rotateTo = self.jumper.rotation[rotateAxis] < Math.PI / 2
-      self.jumper.geometry.translate.x = offset
+      // self.jumper.geometry.translate.x = offset
     } else if (dir === 'none') {
       rotateTo = false
       fallingTo = self.config.ground
@@ -356,7 +362,7 @@ Game.prototype = {
       })
     } else {
       if (self.failedCallback) {
-        self.failedCallback()
+        self.failedCallback(self.score)
       }
     }
   },
@@ -521,12 +527,12 @@ Game.prototype = {
   // 初始化jumper：游戏主角
   _createJumper: function() {
     var material = new THREE.MeshLambertMaterial({ color: this.config.jumperColor })
-    var sphere=new THREE.SphereGeometry(0.35,15,15)
-    var cone=new THREE.ConeGeometry(0.45,1.3,20)
+    var sphere = new THREE.SphereGeometry(0.35,15,15)
+    var cone = new THREE.ConeGeometry(0.45,1.3,20)
     var mesh_s = new THREE.Mesh(sphere, material)
-    var mesh_c=new THREE.Mesh(cone,material)
-    mesh_s.position.y=1.97
-    mesh_c.position.y=0.73
+    var mesh_c = new THREE.Mesh(cone,material)
+    mesh_s.position.y = 1.97
+    mesh_c.position.y = 0.73
     //var mesh = new THREE.Mesh(geometry, material)
     mesh_s.castShadow=true
     mesh_c.castShadow=true
@@ -541,40 +547,33 @@ Game.prototype = {
   },
   // 新增一个方块, 新的方块有2个随机方向
   _createCube: function() {
-    //var material = new THREE.MeshLambertMaterial({ color: this.config.cubeColor })
-    //var geometry = new THREE.CubeGeometry(this.config.cubeWidth, this.config.cubeHeight[1], this.config.cubeDeep)
-    //var handom =Math.floor(4*Math.random())
-    // if(handom == 0){
-
-    // }
-    // else{
-        
-    //}
     var handom =Math.floor(6*Math.random())-1
     if(this.cubeStat.heightBiasCon > 1){
         this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
         this.cubeStat.heightBiasRec2 = handom
     }
     this.cubeStat.heightBiasCon +=1
-    
+    console.log('this.cubeStat.heightBiasRec2:'+this.cubeStat.heightBiasRec2)
     var geometry = new THREE.CubeGeometry(this.config.cubeWidth, this.config.cubeHeight+this.cubeStat.heightBiasRec2, this.config.cubeDeep)
+    var textureLoader = new THREE.TextureLoader();
+
     //var material = new THREE.MeshLambertMaterial({ color: this.config.cubeColor })
     switch(this.cubeStat.heightBiasRec2){
         case -1:
             var random =Math.floor(10*Math.random())
-            switch(random)  
+            switch(random)
             {
-                case 0:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;
-                case 1:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;
-                case 2:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;
-                case 3:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;
-                case 4:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break; 
-                case 5:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;       
-                case 6:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break; 
-                case 7:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;    
-                case 8:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;   
-                case 9:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break; 
-                default:var texture = THREE.ImageUtils.loadTexture('xxq_1.png');break;
+                case 0:var texture = textureLoader.load('./imgs/xxq_1.png');break;
+                case 1:var texture = textureLoader.load('./imgs/xxq_1.png');break;
+                case 2:var texture = textureLoader.load('./imgs/xxq_1.png');break;
+                case 3:var texture = textureLoader.load('./imgs/xxq_1.png');break;
+                case 4:var texture = textureLoader.load('./imgs/xxq_1.png');break; 
+                case 5:var texture = textureLoader.load('./imgs/xxq_1.png');break;       
+                case 6:var texture = textureLoader.load('./imgs/xxq_1.png');break; 
+                case 7:var texture = textureLoader.load('./imgs/xxq_1.png');break;    
+                case 8:var texture = textureLoader.load('./imgs/xxq_1.png');break;   
+                case 9:var texture = textureLoader.load('./imgs/xxq_1.png');break; 
+                default:var texture = textureLoader.load('./imgs/xxq_1.png');break;
             }
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
@@ -607,17 +606,17 @@ Game.prototype = {
             var random =Math.floor(10*Math.random())
             switch(random)  
             {
-                case 0:var texture = THREE.ImageUtils.loadTexture('dy_2.png');break;
-                case 1:var texture = THREE.ImageUtils.loadTexture('dy_2.png');break;
-                case 2:var texture = THREE.ImageUtils.loadTexture('qj_2.png');break;
-                case 3:var texture = THREE.ImageUtils.loadTexture('qj_2.png');break;
-                case 4:var texture = THREE.ImageUtils.loadTexture('xsg_2.jpg');break; 
-                case 5:var texture = THREE.ImageUtils.loadTexture('xsg_2.jpg');break;       
-                case 6:var texture = THREE.ImageUtils.loadTexture('xxm_2.jpg');break; 
-                case 7:var texture = THREE.ImageUtils.loadTexture('xxm_2.jpg');break;    
-                case 8:var texture = THREE.ImageUtils.loadTexture('lxm_2.png');break;   
-                case 9:var texture = THREE.ImageUtils.loadTexture('lxm_2.png');break; 
-                default:var texture = THREE.ImageUtils.loadTexture('lxm_2.png');break;
+                case 0:var texture = textureLoader.load('./imgs/dy_2.png');break;
+                case 1:var texture = textureLoader.load('./imgs/dy_2.png');break;
+                case 2:var texture = textureLoader.load('./imgs/qj_2.png');break;
+                case 3:var texture = textureLoader.load('./imgs/qj_2.png');break;
+                case 4:var texture = textureLoader.load('./imgs/xsg_2.jpg');break; 
+                case 5:var texture = textureLoader.load('./imgs/xsg_2.jpg');break;       
+                case 6:var texture = textureLoader.load('./imgs/xxm_2.jpg');break; 
+                case 7:var texture = textureLoader.load('./imgs/xxm_2.jpg');break;    
+                case 8:var texture = textureLoader.load('./imgs/lxm_2.png');break;   
+                case 9:var texture = textureLoader.load('./imgs/lxm_2.png');break; 
+                default:var texture = textureLoader.load('./imgs/lxm_2.png');break;
             }
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
@@ -650,17 +649,17 @@ Game.prototype = {
             var random =Math.floor(10*Math.random())
             switch(random)  
             {
-                case 0:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;
-                case 1:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;
-                case 2:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;
-                case 3:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;
-                case 4:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break; 
-                case 5:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;       
-                case 6:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break; 
-                case 7:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;    
-                case 8:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;   
-                case 9:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break; 
-                default:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;
+                case 0:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
+                case 1:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
+                case 2:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
+                case 3:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
+                case 4:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
+                case 5:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
+                case 6:var texture = textureLoader.load('./imgs/xianghui_2.png');break; 
+                case 7:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
+                case 8:var texture = textureLoader.load('./imgs/xianghui_2.png');break; 
+                case 9:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
+                default:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
             }
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
@@ -691,19 +690,19 @@ Game.prototype = {
             break;
         case 2:
             var random =Math.floor(10*Math.random())
-            switch(random)  
+            switch(random)
             {
-                case 0:var texture = THREE.ImageUtils.loadTexture('tb1_4.jpg');break;
-                case 1:var texture = THREE.ImageUtils.loadTexture('tb1_4.jpg');break;
-                case 2:var texture = THREE.ImageUtils.loadTexture('tb2_4.jpg');break;
-                case 3:var texture = THREE.ImageUtils.loadTexture('tb2_4.jpg');break;
-                case 4:var texture = THREE.ImageUtils.loadTexture('tb3_4.jpg');break; 
-                case 5:var texture = THREE.ImageUtils.loadTexture('tb3_4.jpg');break;       
-                case 6:var texture = THREE.ImageUtils.loadTexture('tb4_4.jpg');break; 
-                case 7:var texture = THREE.ImageUtils.loadTexture('tb4_4.jpg');break;    
-                case 8:var texture = THREE.ImageUtils.loadTexture('tb5_4.jpg');break;   
-                case 9:var texture = THREE.ImageUtils.loadTexture('tb6_4.jpg');break; 
-                default:var texture = THREE.ImageUtils.loadTexture('tb6_4.jpg');break;
+                case 0:var texture = textureLoader.load('./imgs/tb1_4.jpg');break;
+                case 1:var texture = textureLoader.load('./imgs/tb1_4.jpg');break;
+                case 2:var texture = textureLoader.load('./imgs/tb2_4.jpg');break;
+                case 3:var texture = textureLoader.load('./imgs/tb2_4.jpg');break;
+                case 4:var texture = textureLoader.load('./imgs/tb3_4.jpg');break; 
+                case 5:var texture = textureLoader.load('./imgs/tb3_4.jpg');break;
+                case 6:var texture = textureLoader.load('./imgs/tb4_4.jpg');break;
+                case 7:var texture = textureLoader.load('./imgs/tb4_4.jpg');break;
+                case 8:var texture = textureLoader.load('./imgs/tb5_4.jpg');break;   
+                case 9:var texture = textureLoader.load('./imgs/tb6_4.jpg');break; 
+                default:var texture = textureLoader.load('./imgs/tb6_4.jpg');break;
             }
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
@@ -736,17 +735,17 @@ Game.prototype = {
             var random =Math.floor(10*Math.random())
             switch(random)  
             {
-                case 0:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;
-                case 1:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;
-                case 2:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;
-                case 3:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;
-                case 4:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break; 
-                case 5:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;       
-                case 6:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break; 
-                case 7:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;    
-                case 8:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;   
-                case 9:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break; 
-                default:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;
+                case 0:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;
+                case 1:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;
+                case 2:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;
+                case 3:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;
+                case 4:var texture = textureLoader.load('./imgs/wkl_5.jpg');break; 
+                case 5:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;       
+                case 6:var texture = textureLoader.load('./imgs/wkl_5.jpg');break; 
+                case 7:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;    
+                case 8:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;   
+                case 9:var texture = textureLoader.load('./imgs/wkl_5.jpg');break; 
+                default:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;
             }
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
@@ -779,17 +778,17 @@ Game.prototype = {
             var random =Math.floor(10*Math.random())
             switch(random)  
             {
-                case 0:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break;
-                case 1:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break;
-                case 2:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break;
-                case 3:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break;
-                case 4:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break; 
-                case 5:var texture = THREE.ImageUtils.loadTexture('wkl_6.jpg');break;       
-                case 6:var texture = THREE.ImageUtils.loadTexture('wkl_6.jpg');break; 
-                case 7:var texture = THREE.ImageUtils.loadTexture('wkl_6.jpg');break;    
-                case 8:var texture = THREE.ImageUtils.loadTexture('wkl_6.jpg');break;   
-                case 9:var texture = THREE.ImageUtils.loadTexture('wkl_6.jpg');break; 
-                default:var texture = THREE.ImageUtils.loadTexture('ghl_6.png');break;
+                case 0:var texture = textureLoader.load('./imgs/ghl_6.png');break;
+                case 1:var texture = textureLoader.load('./imgs/ghl_6.png');break;
+                case 2:var texture = textureLoader.load('./imgs/ghl_6.png');break;
+                case 3:var texture = textureLoader.load('./imgs/ghl_6.png');break;
+                case 4:var texture = textureLoader.load('./imgs/ghl_6.png');break; 
+                case 5:var texture = textureLoader.load('./imgs/ghl_6.png');break;       
+                case 6:var texture = textureLoader.load('./imgs/ghl_6.png');break; 
+                case 7:var texture = textureLoader.load('./imgs/ghl_6.png');break;    
+                case 8:var texture = textureLoader.load('./imgs/ghl_6.png');break;   
+                case 9:var texture = textureLoader.load('./imgs/ghl_6.png');break; 
+                default:var texture = textureLoader.load('./imgs/ghl_6.png');break;
             }
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
@@ -819,54 +818,7 @@ Game.prototype = {
             mesh.receiveShadow = true
             break;
     }
-        // var random =Math.floor(10*Math.random())
-        // switch(random)  
-        // {
-          // case 0:var texture = THREE.ImageUtils.loadTexture('guanghuanew.png');break;
-          // case 1:var texture = THREE.ImageUtils.loadTexture('oldgatew.png');break;
-          // case 2:var texture = THREE.ImageUtils.loadTexture('familymart.png');break;
-          // case 3:var texture = THREE.ImageUtils.loadTexture('danyuanw.png');break;
-          // case 4:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break; 
-          // case 5:var texture = THREE.ImageUtils.loadTexture('xianghui.jpg');break;       
-          // case 6:var texture = THREE.ImageUtils.loadTexture('guanghuanew.png');break; 
-          // case 7:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;    
-          // case 8:var texture = THREE.ImageUtils.loadTexture('unon.jpg');break;   
-          // case 9:var texture = THREE.ImageUtils.loadTexture('danyuanw.png');break; 
-          // default:var texture = THREE.ImageUtils.loadTexture('oldgate.png');break;
-        // }
-           // texture.generateMipmaps = false; 
-    // texture.magFilter = THREE.LinearFilter; 
-    // texture.minFilter = THREE.LinearFilter;
-    // texture.wrapS=1001;
-    // texture.wrapT=1001;
-    // var material = new THREE.MeshBasicMaterial({map:texture,transparent:true})
-    // var m1 = [new THREE.Vector2(0, .333), new THREE.Vector2(.666, .333), new THREE.Vector2(.666, 1), new THREE.Vector2(0, 1)];
-    // var m2 = [new THREE.Vector2(.666, .333), new THREE.Vector2(1, .333), new THREE.Vector2(1, 1), new THREE.Vector2(.666, 1)];
-    // var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.666, 0), new THREE.Vector2(.666, .333), new THREE.Vector2(0, .333)];
 
-    // geometry.faceVertexUvs[0] = [];
-    // geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
-    // geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
-    // geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
-    // geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
-    // geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
-    // geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
-    // geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
-    // geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
-    // geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
-    // geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
-    // geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
-    // geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
-    
-    // var mesh = new THREE.Mesh(geometry, material)
-    // mesh.castShadow=true
-    // mesh.receiveShadow = true
-    
-    //var texture=new THREE.TextureLoader().load('bag.png')
-    //var material  = new THREE.MeshBasicMaterial({map:texture})
-    //var material = new THREE.MeshPhongMaterial( { map: THREE.TextureLoader('http://wow.techbrood.com/uploads/1702/crate.jpg'),transparent:true } )
-    
-    
     if (this.cubes.length) {
       var random = Math.random()
       this.cubeStat.nextDir = random > 0.5 ? 'left' : 'right'
