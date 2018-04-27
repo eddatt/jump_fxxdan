@@ -5,10 +5,10 @@ var Game = function() {
     background: 0x282828, // 背景颜色
     ground: -1, // 地面y坐标
     fallingSpeed: 0.2, // 游戏失败掉落速度
-    cubeColor: 0xbebebe,
-    cubeWidth: 4, // 方块宽度
-    cubeHeight: 2, // 方块高度
-    cubeDeep: 4, // 方块深度
+    cubeColor: 0xbebebe, // 底座颜色
+    cubeWidth: 4, // 底座宽度
+    cubeHeight: 2, // 底座高度
+    cubeDeep: 4, // 底座深度
     jumperColor: 0x536689,
     jumperWidth: 1, // jumper宽度
     jumperHeight: 2, // jumper高度
@@ -16,6 +16,7 @@ var Game = function() {
   }
   // 游戏状态
   this.score = 0
+  this.level_1_score = 15 //第一关的基础分数，第二关勋章的发放需要在此基础上进行计数
   this.size = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -28,14 +29,18 @@ var Game = function() {
   this.camera = new THREE.OrthographicCamera(this.size.width / -80, this.size.width / 80, this.size.height / 80, this.size.height / -80, 0, 5000)
   this.renderer = new THREE.WebGLRenderer({ antialias: true,precision: 'highp' })
 
-  this.cubes = [] // 方块数组
+  this.cubes = [] // 底座数组
   this.cubeStat = {
-    nextDir: '',    // 下一个方块相对于当前方块的方向: 'left' 或 'right'
+    nextDir: '',    // 下一个底座相对于当前底座的方向: 'left' 或 'right'
     heightBias:0,
     heightBiasCon:0,
     heightBiasRec1:0,
     heightBiasRec2:0,
-    heightBiasRec3:5
+    heightBiasRec3:5,
+    gameLevel: 1, //游戏关卡，一共2关
+    cubeTextureImg: "./imgs/xxq_1.png", //底座纹理图片
+    medal: "./imgs/xxq_1.png", //勋章
+    cubeTextureIndex: 0, //底座纹理图片序号
   }
   this.jumperStat = {
     ready: false, // 鼠标按完没有
@@ -48,12 +53,30 @@ var Game = function() {
   }
   this.falledStat = {
     location: -1, // jumper所在的位置
-    distance: 0 // jumper和最近方块的距离
+    distance: 0 // jumper和最近底座的距离
   }
   this.fallingStat = {
     speed: 0.2, // 游戏失败后垂直方向上的掉落速度
     end: false // 掉到地面没有
   }
+  //底座相关信息
+  this.buildings = [
+      {"title":"校训墙","img":"./imgs/xxq_1.png","floor":1, medal: "./imgs/medals/xxq_1.png"},
+      {"title":"旦苑","img":"./imgs/dy_2.png","floor":2, medal: "./imgs/medals/dy_2.png"},
+      {"title":"全家","img":"./imgs/qj_2.png","floor":2, medal: "./imgs/medals/qj_2.png"},
+      {"title":"校史馆","img":"./imgs/xsg_2.png","floor":2, medal: "./imgs/medals/xsg_2.png"},
+      {"title":"老校门","img":"./imgs/lxm_2.png","floor":2, medal: "./imgs/medals/lxm_2.png"},
+      {"title":"新校门","img":"./imgs/xxm_2.png","floor":2, medal: "./imgs/medals/xxm_2.png"},
+      {"title":"相辉堂","img":"./imgs/xianghui_2.png","floor":2, medal: "./imgs/medals/xianghui_2.png"},
+      {"title":"第一教学楼","img":"./imgs/tb1_4.png","floor":4, medal: "./imgs/medals/tb1_4.png"},
+      {"title":"第二教学楼","img":"./imgs/tb2_4.png","floor":4, medal: "./imgs/medals/tb2_4.png"},
+      {"title":"第三教学楼","img":"./imgs/tb3_4.png","floor":4, medal: "./imgs/medals/tb3_4.png"},
+      {"title":"第四教学楼","img":"./imgs/tb4_4.png","floor":4, medal: "./imgs/medals/tb4_4.png"},
+      {"title":"第五教学楼","img":"./imgs/tb5_4.png","floor":4, medal: "./imgs/medals/tb5_4.png"},
+      {"title":"第六教学楼","img":"./imgs/tb6_4.png","floor":4, medal: "./imgs/medals/tb6_4.png"},
+      {"title":"文科楼","img":"./imgs/wkl_5.png","floor":5, medal: "./imgs/medals/wkl_5.png"},
+      {"title":"光华楼","img":"./imgs/ghl_6.png","floor":6, medal: "./imgs/medals/ghl_6.png"}
+  ]
 }
 Game.prototype = {
   init: function() {
@@ -62,8 +85,8 @@ Game.prototype = {
     this._setRenderer() // 设置渲染器参数
     this._setLight() // 设置光照
     this._createplane()
-    this._createCube() // 加一个方块
-    this._createCube() // 再加一个方块
+    this._createCube() // 加一个底座
+    this._createCube() // 再加一个底座
     this._createJumper() // 加入游戏者jumper
     this._updateCamera() // 更新相机坐标
 
@@ -97,6 +120,8 @@ Game.prototype = {
     this.cubeStat.heightBiasRec1 = 0
     this.cubeStat.heightBiasRec2 = 0
     this.cubeStat.heightBiasRec3 = 5
+    this.cubeStat.cubeTextureIndex = 0
+    this.cubeStat.gameLevel = 1
     this.jumperStat.xBias = 0
     this.jumperStat.zBias = 0
     this.jumperStat.tRecord = 0
@@ -108,7 +133,7 @@ Game.prototype = {
       speed: 0.2,
       end: false
     }
-    // 删除所有方块
+    // 删除所有底座
     var length = this.cubes.length
     for (var i = 0; i < length; i++) {
       this.scene.remove(this.cubes.pop())
@@ -123,8 +148,8 @@ Game.prototype = {
     this._createJumper()
     this._updateCamera()
     //重新开始音效
-    var music1 = document.getElementById('aud_restart')
-    music1.play()
+    var aud_restart = document.getElementById('aud_restart')
+    aud_restart.play()
   },
   // 游戏成功的执行函数, 外部传入
   addSuccessFn: function(fn) {
@@ -190,10 +215,10 @@ Game.prototype = {
     // console.log("_handleMouseup, xSpeed:"+self.jumperStat.xSpeed+", ySpeed:"+self.jumperStat.ySpeed)
     // 标记鼠标已经松开
     self.jumperStat.ready = true
-    // 判断jumper是在方块水平面之上，是的话说明需要继续运动
+    // 判断jumper是在底座水平面之上，是的话说明需要继续运动
     if ((self.jumper.position.y >= self.config.cubeHeight +self.cubeStat.heightBiasRec1 -1) && self.jumperStat.ySpeed>=0) {
         //if (self.jumper.position.y >= self.config.cubeHeight[1]  -1) {
-        // jumper根据下一个方块的位置来确定水平运动方向
+        // jumper根据下一个底座的位置来确定水平运动方向
         if (self.cubeStat.nextDir === 'left') {
           self.jumper.position.x -= self.jumperStat.xSpeed
           self.jumper.position.x += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord
@@ -279,7 +304,7 @@ Game.prototype = {
         })
     }
     else {
-      // jumper掉落到方块水平位置，开始充值状态，并开始判断掉落是否成功
+      // jumper掉落到底座水平位置，开始充值状态，并开始判断掉落是否成功
       self.jumperStat.ready = false
       self.jumperStat.xSpeed = 0
       self.jumperStat.ySpeed = 0
@@ -298,15 +323,17 @@ Game.prototype = {
         self._createCube()
         self._updateCamera()
 
-        if (self.successCallback) {
+        if (self.successCallback) {          
+          var aud_success = document.getElementById('aud_success')
+          aud_success.play()
           self.successCallback(self.score)
         }
       } else {
         // 掉落失败，进入失败动画
         self._falling()
         //掉落音效
-        var music2 = document.getElementById('aud_failed')
-        music2.play()
+        var aud_failed = document.getElementById('aud_failed')
+        aud_failed.play()
       }
     }
   },
@@ -362,7 +389,22 @@ Game.prototype = {
       })
     } else {
       if (self.failedCallback) {
-        self.failedCallback(self.score)
+        if (this.cubeStat.gameLevel == 2) {
+          //第二关勋章
+          if (self.score < self.level_1_score+5) {
+            this.cubeStat.medal = "./imgs/medals/medal_1.png"
+          }else if (self.score >= self.level_1_score+5 && self.score < self.level_1_score+10) {
+            this.cubeStat.medal = "./imgs/medals/medal_2.png"
+          }else if (self.score >= self.level_1_score+10 && self.score < self.level_1_score+15) {
+            this.cubeStat.medal = "./imgs/medals/medal_3.png"
+          }else{
+            this.cubeStat.medal = "./imgs/medals/medal_3.png"
+          }
+          self.failedCallback(this.cubeStat.medal)
+        }else{
+          //第一关勋章
+          self.failedCallback(this.cubeStat.medal)
+        }
       }
     }
   },
@@ -404,10 +446,10 @@ Game.prototype = {
   /**
    *判断jumper的掉落位置
    *@return {Number} this.falledStat.location
-   * -1 : 掉落在原来的方块，游戏继续
-   * -10: 掉落在原来方块的边缘，游戏失败
-   *  1 : 掉落在下一个方块，游戏成功，游戏继续
-   *  10: 掉落在下一个方块的边缘，游戏失败
+   * -1 : 掉落在原来的底座，游戏继续
+   * -10: 掉落在原来底座的边缘，游戏失败
+   *  1 : 掉落在下一个底座，游戏成功，游戏继续
+   *  10: 掉落在下一个底座的边缘，游戏失败
    *  0 : 掉落在空白区域，游戏失败
    **/
   _checkInCube: function() {
@@ -422,20 +464,20 @@ Game.prototype = {
         x: this.jumper.position.x - this.cubeStat.heightBiasRec2,
         z: this.jumper.position.z - this.cubeStat.heightBiasRec2
       }
-      // 当前方块的位置
+      // 当前底座的位置
       var pointA = {
         x: this.cubes[this.cubes.length - 1 - 1].position.x,
         z: this.cubes[this.cubes.length - 1 - 1].position.z
       }
-      // 下一个方块的位置
+      // 下一个底座的位置
       var pointB = {
         x: this.cubes[this.cubes.length - 1].position.x,
         z: this.cubes[this.cubes.length - 1].position.z
       }
-      var distanceS, // jumper和当前方块的坐标轴距离
-        distanceL,   // jumper和下一个方块的坐标轴距离
+      var distanceS, // jumper和当前底座的坐标轴距离
+        distanceL,   // jumper和下一个底座的坐标轴距离
         distanceLR
-      // 判断下一个方块相对当前方块的方向来确定计算距离的坐标轴
+      // 判断下一个底座相对当前底座的方向来确定计算距离的坐标轴
       if (this.cubeStat.nextDir === 'left') {
         distanceS = Math.abs(pointO.x - pointA.x)
         distanceL = Math.abs(pointO.x - pointB.x)
@@ -448,7 +490,7 @@ Game.prototype = {
       var should = this.config.cubeWidth / 2 + this.config.jumperWidth / 2
       var result = 0
       if (distanceS < should) {
-        // 落在当前方块，将距离储存起来，并继续判断是否可以站稳
+        // 落在当前底座，将距离储存起来，并继续判断是否可以站稳
         this.falledStat.distance = distanceS
         //result = distanceS < (this.config.cubeWidth+this.cubeStat.heightBiasRec1 * 2) / 2 ? -1 : -10
         result = distanceS < (this.config.cubeWidth) / 2 ? -1 : -10
@@ -459,7 +501,7 @@ Game.prototype = {
       } 
       else if ((distanceL < should) &&(this.jumperStat.everReach ==1)) {
         this.falledStat.distance = distanceL
-        // 落在下一个方块，将距离储存起来，并继续判断是否可以站稳
+        // 落在下一个底座，将距离储存起来，并继续判断是否可以站稳
         // if((distanceL >((this.config.cubeWidth-this.cubeStat.heightBiasRec2 * 2) / 2)) && (distanceL <((this.config.cubeWidth+this.cubeStat.heightBiasRec2 * 2) / 2)){
             // result =1
         // }
@@ -545,36 +587,43 @@ Game.prototype = {
     this.jumper.position.y=1
     this.scene.add(this.jumper)
   },
-  // 新增一个方块, 新的方块有2个随机方向
-  _createCube: function() {
-    var handom =Math.floor(6*Math.random())-1
-    if(this.cubeStat.heightBiasCon > 1){
-        this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
-        this.cubeStat.heightBiasRec2 = handom
+  // 底座样式控制
+  _cubeStyle: function() {
+    //第一关，建筑按照顺序出现
+    if (this.cubeStat.gameLevel == 1) {
+      console.log('1 level cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
+      this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
+      this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
+      this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
+      if (this.cubeStat.cubeTextureIndex > 0) {
+        this.cubeStat.medal = this.buildings[this.cubeStat.cubeTextureIndex-1]['medal']
+      }
+      this.cubeStat.cubeTextureIndex += 1
+      if (this.cubeStat.cubeTextureIndex >= this.buildings.length) {
+        console.log("goto 2 level")
+        this.cubeStat.cubeTextureIndex = 0
+        this.cubeStat.gameLevel = 2
+      }
+    }else{
+      //第二关，建筑随机出现
+      console.log('2 level cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
+      this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
+      this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
+      this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
+      //随机数
+      this.cubeStat.cubeTextureIndex = Math.floor(this.buildings.length*Math.random())
     }
-    this.cubeStat.heightBiasCon +=1
-    console.log('this.cubeStat.heightBiasRec2:'+this.cubeStat.heightBiasRec2)
+  },
+  // 新增一个底座, 新的底座有2个随机方向
+  _createCube: function() {
+    this._cubeStyle()
     var geometry = new THREE.CubeGeometry(this.config.cubeWidth, this.config.cubeHeight+this.cubeStat.heightBiasRec2, this.config.cubeDeep)
     var textureLoader = new THREE.TextureLoader();
 
     //var material = new THREE.MeshLambertMaterial({ color: this.config.cubeColor })
     switch(this.cubeStat.heightBiasRec2){
         case -1:
-            var random =Math.floor(10*Math.random())
-            switch(random)
-            {
-                case 0:var texture = textureLoader.load('./imgs/xxq_1.png');break;
-                case 1:var texture = textureLoader.load('./imgs/xxq_1.png');break;
-                case 2:var texture = textureLoader.load('./imgs/xxq_1.png');break;
-                case 3:var texture = textureLoader.load('./imgs/xxq_1.png');break;
-                case 4:var texture = textureLoader.load('./imgs/xxq_1.png');break; 
-                case 5:var texture = textureLoader.load('./imgs/xxq_1.png');break;       
-                case 6:var texture = textureLoader.load('./imgs/xxq_1.png');break; 
-                case 7:var texture = textureLoader.load('./imgs/xxq_1.png');break;    
-                case 8:var texture = textureLoader.load('./imgs/xxq_1.png');break;   
-                case 9:var texture = textureLoader.load('./imgs/xxq_1.png');break; 
-                default:var texture = textureLoader.load('./imgs/xxq_1.png');break;
-            }
+            var texture = textureLoader.load(this.cubeStat.cubeTextureImg);
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
             texture.wrapS=1001;
@@ -584,40 +633,9 @@ Game.prototype = {
             var m2 = [new THREE.Vector2(.8, .2), new THREE.Vector2(1, .2), new THREE.Vector2(1, 1), new THREE.Vector2(.8, 1)];
             var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.8, 0), new THREE.Vector2(.8, .2), new THREE.Vector2(0, .2)];
 
-            geometry.faceVertexUvs[0] = [];
-            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
-            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
-            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
-            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
-            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
-            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
-            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
-            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
-            
-            var mesh = new THREE.Mesh(geometry, material)
-            mesh.castShadow=true
-            mesh.receiveShadow = true
             break;
         case 0:
-            var random =Math.floor(10*Math.random())
-            switch(random)  
-            {
-                case 0:var texture = textureLoader.load('./imgs/dy_2.png');break;
-                case 1:var texture = textureLoader.load('./imgs/dy_2.png');break;
-                case 2:var texture = textureLoader.load('./imgs/qj_2.png');break;
-                case 3:var texture = textureLoader.load('./imgs/qj_2.png');break;
-                case 4:var texture = textureLoader.load('./imgs/xsg_2.jpg');break; 
-                case 5:var texture = textureLoader.load('./imgs/xsg_2.jpg');break;       
-                case 6:var texture = textureLoader.load('./imgs/xxm_2.jpg');break; 
-                case 7:var texture = textureLoader.load('./imgs/xxm_2.jpg');break;    
-                case 8:var texture = textureLoader.load('./imgs/lxm_2.png');break;   
-                case 9:var texture = textureLoader.load('./imgs/lxm_2.png');break; 
-                default:var texture = textureLoader.load('./imgs/lxm_2.png');break;
-            }
+            var texture = textureLoader.load(this.cubeStat.cubeTextureImg);
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
             texture.wrapS=1001;
@@ -627,40 +645,10 @@ Game.prototype = {
             var m2 = [new THREE.Vector2(.666, .333), new THREE.Vector2(1, .333), new THREE.Vector2(1, 1), new THREE.Vector2(.666, 1)];
             var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.666, 0), new THREE.Vector2(.666, .333), new THREE.Vector2(0, .333)];
 
-            geometry.faceVertexUvs[0] = [];
-            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
-            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
-            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
-            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
-            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
-            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
-            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
-            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
-            
-            var mesh = new THREE.Mesh(geometry, material)
-            mesh.castShadow=true
-            mesh.receiveShadow = true
+
             break;
         case 1:
-            var random =Math.floor(10*Math.random())
-            switch(random)  
-            {
-                case 0:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
-                case 1:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
-                case 2:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
-                case 3:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
-                case 4:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
-                case 5:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
-                case 6:var texture = textureLoader.load('./imgs/xianghui_2.png');break; 
-                case 7:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
-                case 8:var texture = textureLoader.load('./imgs/xianghui_2.png');break; 
-                case 9:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
-                default:var texture = textureLoader.load('./imgs/xianghui_2.png');break;
-            }
+            var texture = textureLoader.load(this.cubeStat.cubeTextureImg);
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
             texture.wrapS=1001;
@@ -670,40 +658,10 @@ Game.prototype = {
             var m2 = [new THREE.Vector2(.571, .429), new THREE.Vector2(1, .429), new THREE.Vector2(1, 1), new THREE.Vector2(.571, 1)];
             var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.571, 0), new THREE.Vector2(.571, .429), new THREE.Vector2(0, .429)];
 
-            geometry.faceVertexUvs[0] = [];
-            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
-            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
-            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
-            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
-            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
-            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
-            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
-            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
-            
-            var mesh = new THREE.Mesh(geometry, material)
-            mesh.castShadow=true
-            mesh.receiveShadow = true
+
             break;
         case 2:
-            var random =Math.floor(10*Math.random())
-            switch(random)
-            {
-                case 0:var texture = textureLoader.load('./imgs/tb1_4.jpg');break;
-                case 1:var texture = textureLoader.load('./imgs/tb1_4.jpg');break;
-                case 2:var texture = textureLoader.load('./imgs/tb2_4.jpg');break;
-                case 3:var texture = textureLoader.load('./imgs/tb2_4.jpg');break;
-                case 4:var texture = textureLoader.load('./imgs/tb3_4.jpg');break; 
-                case 5:var texture = textureLoader.load('./imgs/tb3_4.jpg');break;
-                case 6:var texture = textureLoader.load('./imgs/tb4_4.jpg');break;
-                case 7:var texture = textureLoader.load('./imgs/tb4_4.jpg');break;
-                case 8:var texture = textureLoader.load('./imgs/tb5_4.jpg');break;   
-                case 9:var texture = textureLoader.load('./imgs/tb6_4.jpg');break; 
-                default:var texture = textureLoader.load('./imgs/tb6_4.jpg');break;
-            }
+            var texture = textureLoader.load(this.cubeStat.cubeTextureImg);
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
             texture.wrapS=1001;
@@ -712,41 +670,9 @@ Game.prototype = {
             var m1 = [new THREE.Vector2(0, .5), new THREE.Vector2(.5, .5), new THREE.Vector2(.5, 1), new THREE.Vector2(0, 1)];
             var m2 = [new THREE.Vector2(.5, .5), new THREE.Vector2(1, .5), new THREE.Vector2(1, 1), new THREE.Vector2(.5, 1)];
             var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.5, 0), new THREE.Vector2(.5, .5), new THREE.Vector2(0, .5)];
-
-            geometry.faceVertexUvs[0] = [];
-            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
-            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
-            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
-            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
-            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
-            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
-            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
-            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
-            
-            var mesh = new THREE.Mesh(geometry, material)
-            mesh.castShadow=true
-            mesh.receiveShadow = true
             break;
         case 3:
-            var random =Math.floor(10*Math.random())
-            switch(random)  
-            {
-                case 0:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;
-                case 1:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;
-                case 2:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;
-                case 3:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;
-                case 4:var texture = textureLoader.load('./imgs/wkl_5.jpg');break; 
-                case 5:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;       
-                case 6:var texture = textureLoader.load('./imgs/wkl_5.jpg');break; 
-                case 7:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;    
-                case 8:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;   
-                case 9:var texture = textureLoader.load('./imgs/wkl_5.jpg');break; 
-                default:var texture = textureLoader.load('./imgs/wkl_5.jpg');break;
-            }
+            var texture = textureLoader.load(this.cubeStat.cubeTextureImg);
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
             texture.wrapS=1001;
@@ -756,40 +682,9 @@ Game.prototype = {
             var m2 = [new THREE.Vector2(.444, .555), new THREE.Vector2(1, .555), new THREE.Vector2(1, 1), new THREE.Vector2(.444, 1)];
             var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.444, 0), new THREE.Vector2(.444, .555), new THREE.Vector2(0, .555)];
 
-            geometry.faceVertexUvs[0] = [];
-            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
-            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
-            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
-            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
-            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
-            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
-            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
-            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
-            
-            var mesh = new THREE.Mesh(geometry, material)
-            mesh.castShadow=true
-            mesh.receiveShadow = true
             break;
         case 4:
-            var random =Math.floor(10*Math.random())
-            switch(random)  
-            {
-                case 0:var texture = textureLoader.load('./imgs/ghl_6.png');break;
-                case 1:var texture = textureLoader.load('./imgs/ghl_6.png');break;
-                case 2:var texture = textureLoader.load('./imgs/ghl_6.png');break;
-                case 3:var texture = textureLoader.load('./imgs/ghl_6.png');break;
-                case 4:var texture = textureLoader.load('./imgs/ghl_6.png');break; 
-                case 5:var texture = textureLoader.load('./imgs/ghl_6.png');break;       
-                case 6:var texture = textureLoader.load('./imgs/ghl_6.png');break; 
-                case 7:var texture = textureLoader.load('./imgs/ghl_6.png');break;    
-                case 8:var texture = textureLoader.load('./imgs/ghl_6.png');break;   
-                case 9:var texture = textureLoader.load('./imgs/ghl_6.png');break; 
-                default:var texture = textureLoader.load('./imgs/ghl_6.png');break;
-            }
+            var texture = textureLoader.load(this.cubeStat.cubeTextureImg);
             texture.magFilter = THREE.LinearFilter; 
             texture.minFilter = THREE.LinearFilter;
             texture.wrapS=1001;
@@ -798,26 +693,26 @@ Game.prototype = {
             var m1 = [new THREE.Vector2(0, .6), new THREE.Vector2(.4, .6), new THREE.Vector2(.4, 1), new THREE.Vector2(0, 1)];
             var m2 = [new THREE.Vector2(.4, .6), new THREE.Vector2(1, .6), new THREE.Vector2(1, 1), new THREE.Vector2(.4, 1)];
             var m3 = [new THREE.Vector2(0, 0), new THREE.Vector2(.4, 0), new THREE.Vector2(.4, .6), new THREE.Vector2(0, .6)];
-
-            geometry.faceVertexUvs[0] = [];
-            geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
-            geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
-            geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
-            geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
-            geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
-            geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
-            geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
-            geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
-            geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
-            geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
-            
-            var mesh = new THREE.Mesh(geometry, material)
-            mesh.castShadow=true
-            mesh.receiveShadow = true
             break;
     }
+
+    geometry.faceVertexUvs[0] = [];
+    geometry.faceVertexUvs[0][4] = [ m1[3], m1[0], m1[2] ];
+    geometry.faceVertexUvs[0][5] = [ m1[0], m1[1], m1[2] ];
+    geometry.faceVertexUvs[0][0] = [ m2[0], m2[1], m2[3] ];
+    geometry.faceVertexUvs[0][1] = [ m2[1], m2[2], m2[3] ];
+    geometry.faceVertexUvs[0][2] = [ m3[0], m3[1], m3[3] ];
+    geometry.faceVertexUvs[0][3] = [ m3[1], m3[2], m3[3] ];
+    geometry.faceVertexUvs[0][10]= [ m1[0], m1[1], m1[3] ];
+    geometry.faceVertexUvs[0][11]= [ m1[1], m1[2], m1[3] ];
+    geometry.faceVertexUvs[0][6] = [ m2[0], m2[1], m2[3] ];
+    geometry.faceVertexUvs[0][7] = [ m2[1], m2[2], m2[3] ];
+    geometry.faceVertexUvs[0][8] = [ m3[3], m3[0], m3[2] ];
+    geometry.faceVertexUvs[0][9] = [ m3[0], m3[1], m3[2] ];
+    
+    var mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow=true
+    mesh.receiveShadow = true
 
     if (this.cubes.length) {
       var random = Math.random()
@@ -834,12 +729,12 @@ Game.prototype = {
       }
     }
     this.cubes.push(mesh)
-    // 当方块数大于6时，删除前面的方块，因为不会出现在画布中
+    // 当底座数大于6时，删除前面的底座，因为不会出现在画布中
     if (this.cubes.length > 4) {
       this.scene.remove(this.cubes.shift())
     }
     this.scene.add(mesh)
-    // 每新增一个方块，重新计算摄像机坐标
+    // 每新增一个底座，重新计算摄像机坐标
     if (this.cubes.length > 1) {
       this._updateCameraPos()
     }
