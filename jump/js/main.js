@@ -12,9 +12,27 @@ var about_frame = document.querySelector('.about-frame')
 var about_close = document.querySelector('.about-close')
 var level_score = game.level_1_score	//关卡1勋章获得需要的分数，总建筑数目-1（从0开始积分）
 var level_medal = false		//当前发放的为关卡1的勋章，游戏不重启
-medal.addEventListener('click', restart)
+
 about.addEventListener('click', show_about)
 about_close.addEventListener('click', close_about)
+
+// medal.addEventListener('click', restart)
+medal.addEventListener("touchstart", touchstart)
+medal.addEventListener("touchend", touchend)
+
+var start = 0;
+//勋章开始按下
+function touchstart(){
+    start = new Date();
+}
+// 勋章按下结束
+function touchend(){
+    var press_time = new Date() - start;
+    console.log("press_time:"+press_time);
+    if (press_time < 200) {
+      restart();
+    }
+}
 
 // 游戏重新开始，执行函数
 function restart() {

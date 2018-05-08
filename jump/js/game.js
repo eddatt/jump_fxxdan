@@ -194,7 +194,7 @@ Game.prototype = {
       self.jumper.scale.y -= 0.01
       self.jumperStat.xSpeed = 0.24
       self.jumperStat.ySpeed += 0.03
-      self.jumperStat.tRecord +=1
+      self.jumperStat.tRecord += 1
       self._render(self.scene, self.camera)
       //按下鼠标音效
       var music = document.getElementById('aud_mousedown')
@@ -323,7 +323,7 @@ Game.prototype = {
         self._createCube()
         self._updateCamera()
 
-        if (self.successCallback) {          
+        if (self.successCallback) {
           var aud_success = document.getElementById('aud_success')
           aud_success.play()
           self.successCallback(self.score)
