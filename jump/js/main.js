@@ -10,7 +10,7 @@ var medal_pic = document.querySelector('.medal_pic')
 var about = document.querySelector('.about')
 var about_frame = document.querySelector('.about-frame')
 var about_close = document.querySelector('.about-close')
-var level_score = 2	//关卡1勋章获得需要的分数，总建筑数目-1（从0开始积分）
+var level_score = game.level_1_score	//关卡1勋章获得需要的分数，总建筑数目-1（从0开始积分）
 var level_medal = false		//当前发放的为关卡1的勋章，游戏不重启
 medal.addEventListener('click', restart)
 about.addEventListener('click', show_about)
@@ -39,7 +39,7 @@ function failed(medal) {
 function success(score) {
   var scoreCurrent = document.querySelector('.score-current')
   scoreCurrent.innerText = score
-  if (score == level_score) {  	
+  if (score == level_score) {
 	  console.log('level medal')
 	  medal_pic.src = './imgs/medals/medal_level_1.jpg'
 	  mask.style.display = 'flex'

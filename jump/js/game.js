@@ -64,17 +64,17 @@ var Game = function() {
       {"title":"校训墙","img":"./imgs/xxq_1.png","floor":1, medal: "./imgs/medals/xxq_1.png"},
       {"title":"旦苑","img":"./imgs/dy_2.png","floor":2, medal: "./imgs/medals/dy_2.jpg"},
       {"title":"校史馆","img":"./imgs/xsg_2.png","floor":2, medal: "./imgs/medals/xsg_2.png"},
-      // {"title":"老校门","img":"./imgs/lxm_2.png","floor":2, medal: "./imgs/medals/lxm_2.jpg"},
-      // {"title":"新校门","img":"./imgs/xxm_2.png","floor":2, medal: "./imgs/medals/xxm_2.png"},
-      // {"title":"相辉堂","img":"./imgs/xianghui_2.png","floor":2, medal: "./imgs/medals/xianghui_2.png"},
-      // {"title":"第一教学楼","img":"./imgs/tb1_4.png","floor":4, medal: "./imgs/medals/tb1_4.png"},
-      // {"title":"第二教学楼","img":"./imgs/tb2_4.png","floor":4, medal: "./imgs/medals/tb2_4.jpg"},
-      // {"title":"第三教学楼","img":"./imgs/tb3_4.png","floor":4, medal: "./imgs/medals/tb3_4.png"},
-      // {"title":"第四教学楼","img":"./imgs/tb4_4.png","floor":4, medal: "./imgs/medals/tb4_4.png"},
-      // {"title":"第五教学楼","img":"./imgs/tb5_4.png","floor":4, medal: "./imgs/medals/tb5_4.png"},
-      // {"title":"第六教学楼","img":"./imgs/tb6_4.png","floor":4, medal: "./imgs/medals/tb6_4.png"},
-      // {"title":"文科楼","img":"./imgs/wkl_5.png","floor":5, medal: "./imgs/medals/wkl_5.png"},
-      // {"title":"光华楼","img":"./imgs/ghl_6.png","floor":6, medal: "./imgs/medals/ghl_6.jpg"}
+      {"title":"老校门","img":"./imgs/lxm_2.png","floor":2, medal: "./imgs/medals/lxm_2.jpg"},
+      {"title":"新校门","img":"./imgs/xxm_2.png","floor":2, medal: "./imgs/medals/xxm_2.png"},
+      {"title":"相辉堂","img":"./imgs/xianghui_2.png","floor":2, medal: "./imgs/medals/xianghui_2.png"},
+      {"title":"第一教学楼","img":"./imgs/tb1_4.png","floor":4, medal: "./imgs/medals/tb1_4.png"},
+      {"title":"第二教学楼","img":"./imgs/tb2_4.png","floor":4, medal: "./imgs/medals/tb2_4.jpg"},
+      {"title":"第三教学楼","img":"./imgs/tb3_4.png","floor":4, medal: "./imgs/medals/tb3_4.png"},
+      {"title":"第四教学楼","img":"./imgs/tb4_4.png","floor":4, medal: "./imgs/medals/tb4_4.png"},
+      {"title":"第五教学楼","img":"./imgs/tb5_4.png","floor":4, medal: "./imgs/medals/tb5_4.png"},
+      {"title":"第六教学楼","img":"./imgs/tb6_4.png","floor":4, medal: "./imgs/medals/tb6_4.png"},
+      {"title":"文科楼","img":"./imgs/wkl_5.png","floor":5, medal: "./imgs/medals/wkl_5.png"},
+      {"title":"光华楼","img":"./imgs/ghl_6.png","floor":6, medal: "./imgs/medals/ghl_6.jpg"}
   ]
   this.level_1_score = this.buildings.length-1 //第一关的基础分数，第二关勋章的发放需要在此基础上进行计数
 }
