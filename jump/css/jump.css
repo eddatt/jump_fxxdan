@@ -33,26 +33,14 @@ body{
 .title{
   font-size: 20px;
   font-weight: bold;
-  color: rgba(255,255,255,0.6);
+  /*color: rgba(255,255,255,0.6);*/
 }
 .score{
 	font-size: 100px;
 	font-weight: bold;
 	margin-top: 20px;
 }
-button.restart{
-	width: 200px;
-	height: 40px;
-	border-radius: 20px;
-	background: white;
-	border: none;
-  font-weight: bold;
-  font-size: 20px;
-  cursor: pointer;
-}
-button.restart:hover{
-	color:#232323;
-}
+
 .info{
   margin: 20px 0;
   position: absolute;
@@ -75,4 +63,57 @@ a.title{
 	margin-top: 10px;
 	color: rgba(0,0,0,1);
 	font-size: 16px;
+}
+
+
+.about{
+	position: absolute;
+	font-size: 15px;
+	right: 20px;
+	top: 3px;
+}
+.about-frame{
+  margin: 20px 0;
+  position: absolute;
+  text-align: center;
+  opacity: 0.6;
+  width:100%;
+  background-color: #000;
+  display: none;
+}
+.about-main-title{
+  font-size: 25px;
+  font-weight: bold;
+  margin-top: 30px;
+  color: #fff;
+}
+.about-title{
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #fff;
+}
+.about-content{
+  font-size: 20px;
+  color: #fff;
+}
+.about-content a{
+  display: block;
+  color: #fff;
+  text-decoration: none;
+}
+button.about-close{
+	width: 200px;
+	height: 40px;
+	border-radius: 20px;
+	background: white;
+	border: none;
+	font-weight: bold;
+	font-size: 20px;
+	cursor: pointer;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+button.about-close:hover{
+	color:#232323;
 }
