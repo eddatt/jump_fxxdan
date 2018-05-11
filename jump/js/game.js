@@ -67,8 +67,13 @@ var Game = function() {
       {"title":"老校门","img":"./imgs/lxm_2.png","floor":2, medal: "./imgs/medals/lxm_2.jpg"},
       {"title":"新校门","img":"./imgs/xxm_2.png","floor":2, medal: "./imgs/medals/xxm_2.jpg"},
       {"title":"相辉堂","img":"./imgs/xht_2.png","floor":2, medal: "./imgs/medals/xht_2.jpg"},
+      {"title":"子彬院","img":"./imgs/zby_2.png","floor":2, medal: "./imgs/medals/zby_2.jpg"},
+      {"title":"研究生院","img":"./imgs/yjsy_2.png","floor":2, medal: "./imgs/medals/yjsy_2.jpg"},
       {"title":"逸夫科技楼","img":"./imgs/yfkj_2.png","floor":2, medal: "./imgs/medals/yfkj_2.jpg"},
-      {"title":"逸夫科技楼","img":"./imgs/zjtsg_2.png","floor":2, medal: "./imgs/medals/zjtsg_2.jpg"},
+      {"title":"张江图书馆","img":"./imgs/zjtsg_2.png","floor":2, medal: "./imgs/medals/zjtsg_2.jpg"},
+      {"title":"法学院楼","img":"./imgs/fxy_2.png","floor":2, medal: "./imgs/medals/fxy_2.jpg"},
+      {"title":"枫林东一楼","img":"./imgs/fld_2.png","floor":2, medal: "./imgs/medals/fld_2.jpg"},
+      {"title":"李兆基图书馆","img":"./imgs/lzjtsg_2.png","floor":2, medal: "./imgs/medals/lzjtsg_2.jpg"},
       {"title":"理科图书馆","img":"./imgs/lt_3.png","floor":3, medal: "./imgs/medals/lt_3.jpg"},
       {"title":"文科图书馆","img":"./imgs/wt_3.png","floor":3, medal: "./imgs/medals/wt_3.jpg"},
       {"title":"第一教学楼","img":"./imgs/tb1_4.png","floor":4, medal: "./imgs/medals/tb1_4.jpg"},
@@ -78,6 +83,7 @@ var Game = function() {
       {"title":"第五教学楼","img":"./imgs/tb5_4.png","floor":4, medal: "./imgs/medals/tb5_4.jpg"},
       {"title":"第六教学楼","img":"./imgs/tb6_4.png","floor":4, medal: "./imgs/medals/tb6_4.jpg"},
       {"title":"文科楼","img":"./imgs/wkl_5.png","floor":5, medal: "./imgs/medals/wkl_5.jpg"},
+      {"title":"医科图书馆","img":"./imgs/ykg_5.png","floor":5, medal: "./imgs/medals/ykg_5.jpg"},
       {"title":"光华楼","img":"./imgs/ghl_6.png","floor":6, medal: "./imgs/medals/ghl_6.jpg"}
   ]
   this.level_1_score = this.buildings.length-1 //第一关的基础分数，第二关勋章的发放需要在此基础上进行计数
