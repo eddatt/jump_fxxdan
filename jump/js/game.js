@@ -213,6 +213,13 @@ Game.prototype = {
         self._handleMousedown()
       })
     }
+    // if(self.jumperStat.tRecord <4){
+      // self.jumper.scale.y = 1
+      // self.jumperStat.xSpeed = 0
+      // self.jumperStat.ySpeed = 0
+      // self.jumperStat.tRecord = 1
+      // self._render(self.scene, self.camera)
+    // }
   },
   // 鼠标松开或触摸结束绑定的函数
   _handleMouseup: function() {
@@ -251,12 +258,12 @@ Game.prototype = {
         // jumper在垂直方向上先上升后下降
         self.jumperStat.ySpeed -= 0.07
         //self.jumper.rotation.z -=0.1
-        if (self.cubeStat.nextDir === 'left') {
+        if (self.cubeStat.nextDir === 'left' && self.jumperStat.tRecord>=13) {
           //self.jumper.rotation.y -= 0.02
           self.jumper.rotation.z += 2.1*Math.PI /self.jumperStat.tRecord
           self.jumper.position.z -= self.jumperStat.zBias /self.jumperStat.tRecord
           //self.jumper.position.y += 0.05/self.jumperStat.tRecord
-        } else {
+        } else if(self.cubeStat.nextDir === 'right' && self.jumperStat.tRecord>=13){
           //self.jumper.rotation.y -= 0.02
           self.jumper.rotation.x -= 2.1*Math.PI /self.jumperStat.tRecord
           self.jumper.position.x -= self.jumperStat.xBias /self.jumperStat.tRecord
@@ -296,12 +303,12 @@ Game.prototype = {
         // jumper在垂直方向上先上升后下降
         self.jumperStat.ySpeed -= 0.07
         //self.jumper.rotation.z -=0.1
-        if (self.cubeStat.nextDir === 'left') {
+        if (self.cubeStat.nextDir === 'left' && self.jumperStat.tRecord>=13) {
           //self.jumper.rotation.y -= 0.02
           self.jumper.rotation.z += 2.1*Math.PI /self.jumperStat.tRecord
           self.jumper.position.z -= self.jumperStat.zBias /self.jumperStat.tRecord
           //self.jumper.position.y += 0.05/self.jumperStat.tRecord
-        } else {
+        } else if(self.cubeStat.nextDir === 'right' && self.jumperStat.tRecord>=13){
           //self.jumper.rotation.y -= 0.02
           self.jumper.rotation.x -= 2.1*Math.PI /self.jumperStat.tRecord
           self.jumper.position.x -= self.jumperStat.xBias /self.jumperStat.tRecord
