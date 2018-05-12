@@ -238,16 +238,22 @@ Game.prototype = {
         // jumper根据下一个底座的位置来确定水平运动方向
         if (self.cubeStat.nextDir === 'left') {
           self.jumper.position.x -= self.jumperStat.xSpeed
+          if(self.jumperStat.tRecord>=13){
           self.jumper.position.x += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord
           self.jumper.position.x -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord
           self.jumper.position.z += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord
           self.jumper.position.z -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord
+          }
+
         } else {
-          self.jumper.position.z -= self.jumperStat.xSpeed
-          self.jumper.position.x += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord
-          self.jumper.position.x -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord
-          self.jumper.position.z += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord
-          self.jumper.position.z -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord
+            self.jumper.position.z -= self.jumperStat.xSpeed
+            if(self.jumperStat.tRecord>=13){
+            self.jumper.position.x += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord
+            self.jumper.position.x -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord
+            self.jumper.position.z += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord
+            self.jumper.position.z -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord
+            }
+          
         }
         // jumper在垂直方向上运动
         self.jumper.position.y += self.jumperStat.ySpeed
@@ -283,16 +289,23 @@ Game.prototype = {
         self.jumperStat.everReach = 1
         if (self.cubeStat.nextDir === 'left') {
           self.jumper.position.x -= self.jumperStat.xSpeed
+          if(self.jumperStat.tRecord>=13){
           self.jumper.position.x += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
           self.jumper.position.x -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
           self.jumper.position.z += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
           self.jumper.position.z -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
+          }
+
         } else {
-          self.jumper.position.z -= self.jumperStat.xSpeed
+            self.jumper.position.z -= self.jumperStat.xSpeed
+            if(self.jumperStat.tRecord>=13){
           self.jumper.position.x += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
           self.jumper.position.x -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
           self.jumper.position.z += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
           self.jumper.position.z -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
+            }
+
+
         }
         // jumper在垂直方向上运动
         self.jumper.position.y += self.jumperStat.ySpeed
