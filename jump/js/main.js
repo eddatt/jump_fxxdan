@@ -10,8 +10,9 @@ var medal_pic = document.querySelector('.medal_pic')
 var about = document.querySelector('.about')
 var about_frame = document.querySelector('.about-frame')
 var about_close = document.querySelector('.about-close')
-var level_score = game.level_1_score	//关卡1勋章获得需要的分数，总建筑数目-1（从0开始积分）
-var level_medal = false		//当前发放的为关卡1的勋章，游戏不重启
+var scoreCurrent = document.querySelector('.score-current')
+var level_1_score = game.level_1_score	//关卡1勋章获得需要的分数，总建筑数目-1（从0开始积分）
+var level_medal_pic = false		//当前发放的为关卡1的勋章，游戏不重启
 
 about.addEventListener('click', show_about)
 about_close.addEventListener('click', close_about)
@@ -38,9 +39,9 @@ function touchend(){
 function restart() {
   mask.style.display = 'none'
   info.style.display = 'inline'
-  if (level_medal) {
-  	// 当前发放的为关卡1的勋章，游戏不重启，只修改level_medal为普通状态
-  	level_medal = false
+  if (level_medal_pic) {
+  	// 当前发放的为关卡2的勋章，游戏不重启，只修改level_medal为普通状态
+  	level_medal_pic = false
   }else{
   	// 当前发放的为普通勋章，游戏重启
   	game.restart()
@@ -52,21 +53,60 @@ function failed(medal) {
   medal_pic.src = medal
   mask.style.display = 'flex'
   info.style.display = 'none'
+  document.title= "我在《登顶光华楼》获得"+scoreCurrent.innerText+"分，等你来挑战！（复旦大学113周年校庆）";
 }
 // 游戏成功，更新分数
 function success(score) {
-  var scoreCurrent = document.querySelector('.score-current')
   scoreCurrent.innerText = score
-  if (score == level_score) {
-	  console.log('level medal')
-	  medal_pic.src = './imgs/medals/medal_level_1.jpg'
-	  mask.style.display = 'flex'
-	  info.style.display = 'none'
-	  level_medal = true
-  }
+  // 根据分数发放对应勋章
+  switch(score){
+      case level_1_score:
+        medal_pic.src = './imgs/medals/level_1_succ.jpg'
+        mask.style.display = 'flex'
+        info.style.display = 'none'
+        level_medal_pic = true
+        break;
+      case level_1_score + game.add_score*game.level_2_gap_num*1:
+        medal_pic.src = './imgs/medals/medal_1.jpg'
+        mask.style.display = 'flex'
+        info.style.display = 'none'
+        level_medal_pic = true
+        break;
+      case level_1_score + game.add_score*game.level_2_gap_num*2:
+        medal_pic.src = './imgs/medals/medal_2.jpg'
+        mask.style.display = 'flex'
+        info.style.display = 'none'
+        level_medal_pic = true
+        break;
+      case level_1_score + game.add_score*game.level_2_gap_num*3:
+        medal_pic.src = './imgs/medals/medal_3.jpg'
+        mask.style.display = 'flex'
+        info.style.display = 'none'
+        level_medal_pic = true
+        break;
+      case level_1_score + game.add_score*game.level_2_gap_num*4:
+        medal_pic.src = './imgs/medals/medal_4.jpg'
+        mask.style.display = 'flex'
+        info.style.display = 'none'
+        level_medal_pic = true
+        break;
+      case level_1_score + game.add_score*game.level_2_gap_num*5:
+        medal_pic.src = './imgs/medals/medal_5.jpg'
+        mask.style.display = 'flex'
+        info.style.display = 'none'
+        level_medal_pic = true
+        break;
+      case 114:
+        medal_pic.src = './imgs/medals/medal_113.jpg'
+        mask.style.display = 'flex'
+        info.style.display = 'none'
+        level_medal_pic = true
+        break;
+    }
 }
 // 显示关于
 function show_about() {
+  console.log('about')
 	info.style.display = 'none'
 	about_frame.style.display = 'block'
 }
