@@ -2,7 +2,7 @@ var Game = function() {
   // 基本参数
   this.config = {
     isMobile: false,
-    background: 0x282828, // 背景颜色
+    background: 0xd5e2fb, // 背景颜色
     ground: -1, // 地面y坐标
     fallingSpeed: 0.2, // 游戏失败掉落速度
     cubeColor: 0xbebebe, // 底座颜色
@@ -94,7 +94,7 @@ Game.prototype = {
     this._setCamera() // 设置摄像机位置
     this._setRenderer() // 设置渲染器参数
     this._setLight() // 设置光照
-    this._createplane()
+    // this._createplane()
     this._createCube() // 加一个底座
     this._createCube() // 再加一个底座
     this._createJumper() // 加入游戏者jumper
@@ -152,7 +152,7 @@ Game.prototype = {
     this.scene.remove(this.jumper)
     // 显示的分数设为 0
     this.successCallback(this.score)
-    this._createplane()
+    // this._createplane()
     this._createCube()
     this._createCube()
     this._createJumper()
@@ -818,12 +818,12 @@ Game.prototype = {
     this.size.width = window.innerWidth,
       this.size.height = window.innerHeight
   },
-  _createplane: function(){
-  var planeGeometry = new THREE.BoxBufferGeometry(3200, 6, 3200)
-  var planeMaterial=new THREE.MeshLambertMaterial({color:0xd5e2fb})
-  var plane = new THREE.Mesh(planeGeometry,planeMaterial)
-  plane.position.y = -4
-  plane.receiveShadow=true
-  this.scene.add(plane)
-  }
+  // _createplane: function(){
+  // var planeGeometry = new THREE.BoxBufferGeometry(3200, 6, 3200)
+  // var planeMaterial=new THREE.MeshLambertMaterial({color:0xd5e2fb})
+  // var plane = new THREE.Mesh(planeGeometry,planeMaterial)
+  // plane.position.y = -4
+  // plane.receiveShadow=true
+  // this.scene.add(plane)
+  // }
 }
