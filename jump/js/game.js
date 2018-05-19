@@ -62,12 +62,15 @@ var Game = function() {
   //底座相关信息
   this.buildings = [
       {"title":"校训墙","img":"./imgs/xxq_1.png","floor":1, medal: "./imgs/medals/xxq_1.jpg"},
+      {"title":"113","img":"./imgs/113_1.png","floor":1, medal: "./imgs/medals/113_1.png"},
       {"title":"旦苑","img":"./imgs/dy_2.png","floor":2, medal: "./imgs/medals/dy_2.jpg"},
       {"title":"校史馆","img":"./imgs/xsg_2.png","floor":2, medal: "./imgs/medals/xsg_2.jpg"},
       {"title":"老校门","img":"./imgs/lxm_2.png","floor":2, medal: "./imgs/medals/lxm_2.jpg"},
       {"title":"新校门","img":"./imgs/xxm_2.png","floor":2, medal: "./imgs/medals/xxm_2.jpg"},
       {"title":"相辉堂","img":"./imgs/xht_2.png","floor":2, medal: "./imgs/medals/xht_2.jpg"},
       {"title":"子彬院","img":"./imgs/zby_2.png","floor":2, medal: "./imgs/medals/zby_2.jpg"},
+      {"title":"love1","img":"./imgs/love_2.png","floor":2, medal: "./imgs/medals/zby_2.jpg"},
+      {"title":"love2","img":"./imgs/love2_2.png","floor":2, medal: "./imgs/medals/yjsy_2.jpg"},
       {"title":"研究生院","img":"./imgs/yjsy_2.png","floor":2, medal: "./imgs/medals/yjsy_2.jpg"},
       {"title":"逸夫科技楼","img":"./imgs/yfkj_2.png","floor":2, medal: "./imgs/medals/yfkj_2.jpg"},
       {"title":"张江图书馆","img":"./imgs/zjtsg_2.png","floor":2, medal: "./imgs/medals/zjtsg_2.jpg"},
@@ -349,7 +352,7 @@ Game.prototype = {
       //self._printContent()
       if (self.falledStat.location === 1) {
         // 掉落成功，进入下一步
-        self.score++
+        self.score+=3;
         self._createCube()
         self._updateCamera()
 
@@ -639,9 +642,7 @@ Game.prototype = {
       this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
       this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
       this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
-      if (this.cubeStat.cubeTextureIndex > 0) {
-        this.cubeStat.medal = this.buildings[this.cubeStat.cubeTextureIndex-1]['medal']
-      }
+      this.cubeStat.medal = this.buildings[this.cubeStat.cubeTextureIndex]['medal']
       this.cubeStat.cubeTextureIndex += 1
       if (this.cubeStat.cubeTextureIndex >= this.buildings.length) {
         console.log("goto 2 level")
