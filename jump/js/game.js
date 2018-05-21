@@ -642,7 +642,7 @@ Game.prototype = {
       this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
       this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
       //随机数
-      this.cubeStat.cubeTextureIndex += Math.floor(3*Math.random())
+      this.cubeStat.cubeTextureIndex += Math.floor(5*Math.random())
       if (this.cubeStat.cubeTextureIndex >= this.buildings.length) {
         this.cubeStat.cubeTextureIndex = 0
       }
