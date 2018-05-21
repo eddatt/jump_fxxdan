@@ -62,22 +62,22 @@ var Game = function() {
   }
   //底座相关信息
   this.buildings = [
-      {"title":"113","img":"./imgs/113_1.png","floor":1, medal: "./imgs/medals/113_1.png"},
+      {"title":"113","img":"./imgs/113_1.png","floor":1, medal: "./imgs/medals/xxq_1.jpg"},
       {"title":"校训墙","img":"./imgs/xxq_1.png","floor":1, medal: "./imgs/medals/xxq_1.jpg"},
+      {"title":"love1","img":"./imgs/love_2.png","floor":2, medal: "./imgs/medals/dy_2.jpg"},
       {"title":"旦苑","img":"./imgs/dy_2.png","floor":2, medal: "./imgs/medals/dy_2.jpg"},
       {"title":"校史馆","img":"./imgs/xsg_2.png","floor":2, medal: "./imgs/medals/xsg_2.jpg"},
       {"title":"老校门","img":"./imgs/lxm_2.png","floor":2, medal: "./imgs/medals/lxm_2.jpg"},
       {"title":"新校门","img":"./imgs/xxm_2.png","floor":2, medal: "./imgs/medals/xxm_2.jpg"},
       {"title":"相辉堂","img":"./imgs/xht_2.png","floor":2, medal: "./imgs/medals/xht_2.jpg"},
       {"title":"子彬院","img":"./imgs/zby_2.png","floor":2, medal: "./imgs/medals/zby_2.jpg"},
-      {"title":"love1","img":"./imgs/love_2.png","floor":2, medal: "./imgs/medals/zby_2.jpg"},
-      {"title":"love2","img":"./imgs/love2_2.png","floor":2, medal: "./imgs/medals/yjsy_2.jpg"},
       {"title":"研究生院","img":"./imgs/yjsy_2.png","floor":2, medal: "./imgs/medals/yjsy_2.jpg"},
       {"title":"逸夫科技楼","img":"./imgs/yfkj_2.png","floor":2, medal: "./imgs/medals/yfkj_2.jpg"},
       {"title":"张江图书馆","img":"./imgs/zjtsg_2.png","floor":2, medal: "./imgs/medals/zjtsg_2.jpg"},
       {"title":"法学院楼","img":"./imgs/fxy_2.png","floor":2, medal: "./imgs/medals/fxy_2.jpg"},
       {"title":"枫林东一楼","img":"./imgs/fld_2.png","floor":2, medal: "./imgs/medals/fld_2.jpg"},
       {"title":"李兆基图书馆","img":"./imgs/lzjtsg_2.png","floor":2, medal: "./imgs/medals/lzjtsg_2.jpg"},
+      {"title":"love2","img":"./imgs/love2_2.png","floor":2, medal: "./imgs/medals/lt_3.jpg"},
       {"title":"理科图书馆","img":"./imgs/lt_3.png","floor":3, medal: "./imgs/medals/lt_3.jpg"},
       {"title":"文科图书馆","img":"./imgs/wt_3.png","floor":3, medal: "./imgs/medals/wt_3.jpg"},
       {"title":"第一教学楼","img":"./imgs/tb1_4.png","floor":4, medal: "./imgs/medals/tb1_4.jpg"},
@@ -631,18 +631,21 @@ Game.prototype = {
         this.cubeStat.medal = this.buildings[this.cubeStat.cubeTextureIndex]['medal']
         this.cubeStat.cubeTextureIndex += 1
       }else{
-        console.log("goto 2 level")
+        console.log("goto level 2")
         this.cubeStat.cubeTextureIndex = 0
         this.cubeStat.gameLevel = 2
       }
     }else{
       //第二关，建筑随机出现
-      console.log('2 level cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
+      console.log('level 2 cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
       this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
       this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
       this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
       //随机数
-      this.cubeStat.cubeTextureIndex = Math.floor(this.buildings.length*Math.random())
+      this.cubeStat.cubeTextureIndex += Math.floor(3*Math.random())
+      if (this.cubeStat.cubeTextureIndex >= this.buildings.length) {
+        this.cubeStat.cubeTextureIndex = 0
+      }
     }
   },
   // 新增一个底座, 新的底座有2个随机方向
