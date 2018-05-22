@@ -62,9 +62,9 @@ var Game = function() {
   }
   //底座相关信息
   this.buildings = [
-      {"title":"113","img":"./imgs/113_1.png","floor":1, medal: "./imgs/medals/xxq_1.jpg"},
+      {"title":"113","img":"./imgs/113_1.png","floor":1, medal: "./imgs/medals/love2_2.jpg"},
       {"title":"校训墙","img":"./imgs/xxq_1.png","floor":1, medal: "./imgs/medals/xxq_1.jpg"},
-      {"title":"love1","img":"./imgs/love_2.png","floor":2, medal: "./imgs/medals/dy_2.jpg"},
+      {"title":"113校庆","img":"./imgs/love_2.png","floor":2, medal: "./imgs/medals/love_2.jpg"},
       {"title":"旦苑","img":"./imgs/dy_2.png","floor":2, medal: "./imgs/medals/dy_2.jpg"},
       {"title":"校史馆","img":"./imgs/xsg_2.png","floor":2, medal: "./imgs/medals/xsg_2.jpg"},
       {"title":"老校门","img":"./imgs/lxm_2.png","floor":2, medal: "./imgs/medals/lxm_2.jpg"},
@@ -77,7 +77,7 @@ var Game = function() {
       {"title":"法学院楼","img":"./imgs/fxy_2.png","floor":2, medal: "./imgs/medals/fxy_2.jpg"},
       {"title":"枫林东一楼","img":"./imgs/fld_2.png","floor":2, medal: "./imgs/medals/fld_2.jpg"},
       {"title":"李兆基图书馆","img":"./imgs/lzjtsg_2.png","floor":2, medal: "./imgs/medals/lzjtsg_2.jpg"},
-      {"title":"love2","img":"./imgs/love2_2.png","floor":2, medal: "./imgs/medals/lt_3.jpg"},
+      {"title":"113校庆","img":"./imgs/love2_2.png","floor":2, medal: "./imgs/medals/love2_2.jpg"},
       {"title":"理科图书馆","img":"./imgs/lt_3.png","floor":3, medal: "./imgs/medals/lt_3.jpg"},
       {"title":"文科图书馆","img":"./imgs/wt_3.png","floor":3, medal: "./imgs/medals/wt_3.jpg"},
       {"title":"第一教学楼","img":"./imgs/tb1_4.png","floor":4, medal: "./imgs/medals/tb1_4.jpg"},
