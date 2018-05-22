@@ -511,21 +511,30 @@ Game.prototype = {
         x: this.cubes[this.cubes.length - 1].position.x,
         z: this.cubes[this.cubes.length - 1].position.z
       }
+      // 下一个方块的位置（修正）
+      var HeightBias = (this.cubeStat.heightBiasRec2 > 0)?((this.cubeStat.heightBiasRec2 /2)+0.5):0
+      var pointX = {
+        x: this.cubes[this.cubes.length - 1].position.x +HeightBias,
+        z: this.cubes[this.cubes.length - 1].position.z +HeightBias
+      }
       var distanceS, // jumper和当前底座的坐标轴距离
         distanceSR,
         distanceL,   // jumper和下一个底座的坐标轴距离
-        distanceLR
+        distanceLR,
+        distanceX
       // 判断下一个底座相对当前底座的方向来确定计算距离的坐标轴
       if (this.cubeStat.nextDir === 'left') {
         distanceS = Math.abs(pointO.x - pointA.x)
         distanceSR = Math.abs(pointR.x - pointA.x)
         distanceL = Math.abs(pointO.x - pointB.x)
         distanceLR =Math.abs(pointR.x - pointB.x)
+        distanceX = Math.abs(pointO.x - pointX.x)
       } else {
         distanceS = Math.abs(pointO.z - pointA.z)
         distanceSR = Math.abs(pointR.z - pointA.z)
         distanceL = Math.abs(pointO.z - pointB.z)
         distanceLR =Math.abs(pointR.z - pointB.z)
+        distanceX = Math.abs(pointO.z - pointX.z)
       }
       var should = this.config.cubeWidth / 2 + this.config.jumperWidth / 2
       var result = 0
@@ -534,7 +543,7 @@ Game.prototype = {
         this.falledStat.distance = distanceS
         //result = distanceS < (this.config.cubeWidth+this.cubeStat.heightBiasRec1 * 2) / 2 ? -1 : -10
         if(this.cubeStat.heightBiasRec1 ==-1){
-            console.log("123123123")
+            // console.log("123123123")
             result = distanceS < 1 ? -1 : -10
         }
         else{
@@ -545,8 +554,8 @@ Game.prototype = {
             this.jumperStat.xBias=this.jumper.position.x-this.cubes[this.cubes.length - 1 - 1].position.x-this.cubeStat.heightBiasRec1 /2
             this.jumperStat.zBias=this.jumper.position.z-this.cubes[this.cubes.length - 1 - 1].position.z-this.cubeStat.heightBiasRec1 /2
         }
-      }else if ((distanceL < should) && (this.jumperStat.everReach ==1)) {
-        this.falledStat.distance = distanceL
+      }else if ((distanceX < should) && (this.jumperStat.everReach ==1)) {
+        this.falledStat.distance = distanceX
         // 落在下一个底座，将距离储存起来，并继续判断是否可以站稳
         // if((distanceL >((this.config.cubeWidth-this.cubeStat.heightBiasRec2 * 2) / 2)) && (distanceL <((this.config.cubeWidth+this.cubeStat.heightBiasRec2 * 2) / 2)){
             // result =1
@@ -555,10 +564,10 @@ Game.prototype = {
             // result=10
         // }
         //result = distanceL < ((this.config.cubeWidth+this.cubeStat.heightBiasRec2 * 2) / 2) ? 1 : 10
-        result = distanceL < ((this.config.cubeWidth) / 2) ? 1 : 10
+        result = distanceX < ((this.config.cubeWidth) / 2) ? 1 : 10
         if (result == 1){
-            this.jumperStat.xBias=this.jumper.position.x-this.cubes[this.cubes.length - 1 ].position.x-this.cubeStat.heightBiasRec2 /2 
-            this.jumperStat.zBias=this.jumper.position.z-this.cubes[this.cubes.length - 1 ].position.z-this.cubeStat.heightBiasRec2 /2 
+            this.jumperStat.xBias=this.jumper.position.x-this.cubes[this.cubes.length - 1 ].position.x-this.cubeStat.heightBiasRec2 /2 -HeightBias/2
+            this.jumperStat.zBias=this.jumper.position.z-this.cubes[this.cubes.length - 1 ].position.z-this.cubeStat.heightBiasRec2 /2 -HeightBias/2
         }
       } else {
         result = 0
