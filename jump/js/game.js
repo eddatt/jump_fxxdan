@@ -648,13 +648,24 @@ Game.prototype = {
       //第二关，建筑随机出现
       console.log('level 2 cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
       this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
+      //
+      this.cubeStat.cubeTextureIndex = Math.floor(27*Math.random())
+      if(this.cubeStat.cubeTextureIndex >=24){
+          var randomdice = Math.floor(3*Math.random())
+          if(randomdice > 0){
+              this.cubeStat.cubeTextureIndex = Math.floor(24*Math.random())
+          }
+      }
       this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
       this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
+      //////////原随机
+      // this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
+      // this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
       //随机数
-      this.cubeStat.cubeTextureIndex += Math.floor(5*Math.random())
-      if (this.cubeStat.cubeTextureIndex >= this.buildings.length) {
-        this.cubeStat.cubeTextureIndex = Math.floor(10*Math.random())
-      }
+      // this.cubeStat.cubeTextureIndex += Math.floor(5*Math.random())
+      // if (this.cubeStat.cubeTextureIndex >= this.buildings.length) {
+        // this.cubeStat.cubeTextureIndex = Math.floor(10*Math.random())
+      // }
     }
   },
   // 新增一个底座, 新的底座有2个随机方向
@@ -803,7 +814,7 @@ Game.prototype = {
     this.scene.add(light)
   },
   _setCamera: function() {
-    this.camera.position.set(100, 100, 100)
+    this.camera.position.set(100, 110, 100)
     this.camera.lookAt(this.cameraPos.current)
   },
   _setRenderer: function() {

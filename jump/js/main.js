@@ -58,7 +58,7 @@ function failed(medal) {
 // 游戏成功，更新分数
 function success(score) {
   scoreCurrent.innerText = score
-  // 根据分数发放对应勋章
+  根据分数发放对应勋章
   switch(score){
       case level_1_score:
         medal_pic.src = './imgs/medals/level_1_succ.jpg'
