@@ -16,7 +16,8 @@ var Game = function() {
   }
   // 游戏状态
   this.score = 0
-  // this.level_1_score = 15 //第一关的基础分数，第二关勋章的发放需要在此基础上进行计数
+  this.add_score = 3 //每次增加的分数
+  this.level_2_gap_num = 5 //第二关发放秘籍的间隔数
   this.size = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -61,22 +62,22 @@ var Game = function() {
   }
   //底座相关信息
   this.buildings = [
+      {"title":"113","img":"./imgs/113_1.png","floor":1, medal: "./imgs/medals/love2_2.jpg"},
       {"title":"校训墙","img":"./imgs/xxq_1.png","floor":1, medal: "./imgs/medals/xxq_1.jpg"},
-      {"title":"113","img":"./imgs/113_1.png","floor":1, medal: "./imgs/medals/113_1.png"},
+      {"title":"113校庆","img":"./imgs/love_2.png","floor":2, medal: "./imgs/medals/love_2.jpg"},
       {"title":"旦苑","img":"./imgs/dy_2.png","floor":2, medal: "./imgs/medals/dy_2.jpg"},
       {"title":"校史馆","img":"./imgs/xsg_2.png","floor":2, medal: "./imgs/medals/xsg_2.jpg"},
       {"title":"老校门","img":"./imgs/lxm_2.png","floor":2, medal: "./imgs/medals/lxm_2.jpg"},
       {"title":"新校门","img":"./imgs/xxm_2.png","floor":2, medal: "./imgs/medals/xxm_2.jpg"},
       {"title":"相辉堂","img":"./imgs/xht_2.png","floor":2, medal: "./imgs/medals/xht_2.jpg"},
       {"title":"子彬院","img":"./imgs/zby_2.png","floor":2, medal: "./imgs/medals/zby_2.jpg"},
-      {"title":"love1","img":"./imgs/love_2.png","floor":2, medal: "./imgs/medals/zby_2.jpg"},
-      {"title":"love2","img":"./imgs/love2_2.png","floor":2, medal: "./imgs/medals/yjsy_2.jpg"},
       {"title":"研究生院","img":"./imgs/yjsy_2.png","floor":2, medal: "./imgs/medals/yjsy_2.jpg"},
       {"title":"逸夫科技楼","img":"./imgs/yfkj_2.png","floor":2, medal: "./imgs/medals/yfkj_2.jpg"},
       {"title":"张江图书馆","img":"./imgs/zjtsg_2.png","floor":2, medal: "./imgs/medals/zjtsg_2.jpg"},
       {"title":"法学院楼","img":"./imgs/fxy_2.png","floor":2, medal: "./imgs/medals/fxy_2.jpg"},
       {"title":"枫林东一楼","img":"./imgs/fld_2.png","floor":2, medal: "./imgs/medals/fld_2.jpg"},
       {"title":"李兆基图书馆","img":"./imgs/lzjtsg_2.png","floor":2, medal: "./imgs/medals/lzjtsg_2.jpg"},
+      {"title":"113校庆","img":"./imgs/love2_2.png","floor":2, medal: "./imgs/medals/love2_2.jpg"},
       {"title":"理科图书馆","img":"./imgs/lt_3.png","floor":3, medal: "./imgs/medals/lt_3.jpg"},
       {"title":"文科图书馆","img":"./imgs/wt_3.png","floor":3, medal: "./imgs/medals/wt_3.jpg"},
       {"title":"第一教学楼","img":"./imgs/tb1_4.png","floor":4, medal: "./imgs/medals/tb1_4.jpg"},
@@ -89,7 +90,7 @@ var Game = function() {
       {"title":"医科图书馆","img":"./imgs/ykg_5.png","floor":5, medal: "./imgs/medals/ykg_5.jpg"},
       {"title":"光华楼","img":"./imgs/ghl_6.png","floor":6, medal: "./imgs/medals/ghl_6.jpg"}
   ]
-  this.level_1_score = this.buildings.length-1 //第一关的基础分数，第二关勋章的发放需要在此基础上进行计数
+  this.level_1_score = (this.buildings.length-1)*this.add_score //第一关的基础分数，第二关勋章的发放需要在此基础上进行计数
 }
 Game.prototype = {
   init: function() {
@@ -352,7 +353,7 @@ Game.prototype = {
       //self._printContent()
       if (self.falledStat.location === 1) {
         // 掉落成功，进入下一步
-        self.score+=3;
+        self.score += this.add_score;
         self._createCube()
         self._updateCamera()
 
@@ -422,26 +423,10 @@ Game.prototype = {
       })
     } else {
       if (self.failedCallback) {
-        if (this.cubeStat.gameLevel == 2) {
-          //第二关勋章
-          if (self.score < self.level_1_score) {
-            // use the level 1 medal
-          }else if (self.score < self.level_1_score+5) {
-            this.cubeStat.medal = "./imgs/medals/medal_1.jpg"
-          }else if (self.score < self.level_1_score+10) {
-            this.cubeStat.medal = "./imgs/medals/medal_2.jpg"
-          }else if (self.score < self.level_1_score+15) {
-            this.cubeStat.medal = "./imgs/medals/medal_3.jpg"
-          }else if (self.score < self.level_1_score+20) {
-            this.cubeStat.medal = "./imgs/medals/medal_4.jpg"
-          }else{
-            this.cubeStat.medal = "./imgs/medals/medal_5.jpg"
-          }
-          self.failedCallback(this.cubeStat.medal)
-        }else{
-          //第一关勋章
-          self.failedCallback(this.cubeStat.medal)
+        if (this.cubeStat.gameLevel == 2) {    //第二关失败
+          this.cubeStat.medal = "./imgs/medals/level_2_fail.jpg"          
         }
+        self.failedCallback(this.cubeStat.medal)
       }
     }
   },
@@ -647,25 +632,29 @@ Game.prototype = {
   _cubeStyle: function() {
     //第一关，建筑按照顺序出现
     if (this.cubeStat.gameLevel == 1) {
-      console.log('1 level cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
-      this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
-      this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
-      this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
-      this.cubeStat.medal = this.buildings[this.cubeStat.cubeTextureIndex]['medal']
-      this.cubeStat.cubeTextureIndex += 1
-      if (this.cubeStat.cubeTextureIndex >= this.buildings.length) {
-        console.log("goto 2 level")
+      if (this.cubeStat.cubeTextureIndex < this.buildings.length) {
+        console.log('1 level cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
+        this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
+        this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
+        this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
+        this.cubeStat.medal = this.buildings[this.cubeStat.cubeTextureIndex]['medal']
+        this.cubeStat.cubeTextureIndex += 1
+      }else{
+        console.log("goto level 2")
         this.cubeStat.cubeTextureIndex = 0
         this.cubeStat.gameLevel = 2
       }
     }else{
       //第二关，建筑随机出现
-      console.log('2 level cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
+      console.log('level 2 cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
       this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
       this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
       this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
       //随机数
-      this.cubeStat.cubeTextureIndex = Math.floor(this.buildings.length*Math.random())
+      this.cubeStat.cubeTextureIndex += Math.floor(5*Math.random())
+      if (this.cubeStat.cubeTextureIndex >= this.buildings.length) {
+        this.cubeStat.cubeTextureIndex = 0
+      }
     }
   },
   // 新增一个底座, 新的底座有2个随机方向
