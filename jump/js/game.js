@@ -653,7 +653,7 @@ Game.prototype = {
       //随机数
       this.cubeStat.cubeTextureIndex += Math.floor(5*Math.random())
       if (this.cubeStat.cubeTextureIndex >= this.buildings.length) {
-        this.cubeStat.cubeTextureIndex = 0
+        this.cubeStat.cubeTextureIndex = Math.floor(10*Math.random())
       }
     }
   },
