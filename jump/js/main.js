@@ -26,6 +26,7 @@ var start = 0;
 function touchstart(){
     start = new Date();
 }
+
 // 勋章按下结束
 function touchend(){
     var press_time = new Date() - start;
@@ -114,4 +115,9 @@ function show_about() {
 function close_about() {
 	info.style.display = 'inline'
 	about_frame.style.display = 'none'
+}
+
+//禁止鼠标右键，可以解决部分手机微信内提示在浏览器打开的bug
+document.oncontextmenu = function(e){
+    e.preventDefault();
 }

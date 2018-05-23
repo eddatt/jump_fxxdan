@@ -91,6 +91,7 @@ var Game = function() {
       {"title":"光华楼","img":"./imgs/ghl_6.png","floor":6, medal: "./imgs/medals/ghl_6.jpg"}
   ]
   this.level_1_score = (this.buildings.length-1)*this.add_score //第一关的基础分数，第二关勋章的发放需要在此基础上进行计数
+  this.img_wrap = []
 }
 Game.prototype = {
   init: function() {
@@ -126,6 +127,15 @@ Game.prototype = {
     window.addEventListener('resize', function() {
       self._handleWindowResize()
     })
+    this._preloadFile() // 预加载图片等资源
+  },
+  //预加载纹理图片
+  _preloadFile: function() {
+    for(var i =0; i< this.buildings.length ;i++) {
+      console.log(i+":"+this.buildings[i]['img'])
+      this.img_wrap[i] = new Image();
+      this.img_wrap[i].src = this.buildings[i]['img'];
+    }
   },
   // 游戏失败重新开始的初始化配置
   restart: function() {
@@ -294,22 +304,19 @@ Game.prototype = {
         if (self.cubeStat.nextDir === 'left') {
           self.jumper.position.x -= self.jumperStat.xSpeed
           if(self.jumperStat.tRecord>=13){
-          self.jumper.position.x += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
-          self.jumper.position.x -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
-          self.jumper.position.z += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
-          self.jumper.position.z -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
+            self.jumper.position.x += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
+            self.jumper.position.x -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
+            self.jumper.position.z += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
+            self.jumper.position.z -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
           }
-
         } else {
-            self.jumper.position.z -= self.jumperStat.xSpeed
-            if(self.jumperStat.tRecord>=13){
-          self.jumper.position.x += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
-          self.jumper.position.x -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
-          self.jumper.position.z += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
-          self.jumper.position.z -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
-            }
-
-
+          self.jumper.position.z -= self.jumperStat.xSpeed
+          if(self.jumperStat.tRecord>=13){
+            self.jumper.position.x += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
+            self.jumper.position.x -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
+            self.jumper.position.z += (this.cubeStat.heightBiasRec2 / 2) / self.jumperStat.tRecord *1.05
+            self.jumper.position.z -= (this.cubeStat.heightBiasRec1 / 2) / self.jumperStat.tRecord *1.05
+          }
         }
         // jumper在垂直方向上运动
         self.jumper.position.y += self.jumperStat.ySpeed
@@ -358,6 +365,7 @@ Game.prototype = {
         self._updateCamera()
 
         if (self.successCallback) {
+          console.log("aud_success")
           var aud_success = document.getElementById('aud_success')
           aud_success.play()
           self.successCallback(self.score)
@@ -366,6 +374,7 @@ Game.prototype = {
         // 掉落失败，进入失败动画
         self._falling()
         //掉落音效
+        console.log("aud_failed")
         var aud_failed = document.getElementById('aud_failed')
         aud_failed.play()
       }
@@ -648,14 +657,8 @@ Game.prototype = {
       //第二关，建筑随机出现
       console.log('level 2 cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
       this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
-      //
-      this.cubeStat.cubeTextureIndex = Math.floor(27*Math.random())
-      if(this.cubeStat.cubeTextureIndex >=24){
-          var randomdice = Math.floor(3*Math.random())
-          if(randomdice > 0){
-              this.cubeStat.cubeTextureIndex = Math.floor(24*Math.random())
-          }
-      }
+
+      this.cubeStat.cubeTextureIndex = Math.floor(24*Math.random()) //过高建筑不出现
       this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
       this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
       //////////原随机
@@ -783,7 +786,7 @@ Game.prototype = {
       }
     }
     this.cubes.push(mesh)
-    // 当底座数大于6时，删除前面的底座，因为不会出现在画布中
+    // 当底座数大于4时，删除前面的底座，因为不会出现在画布中
     if (this.cubes.length > 4) {
       this.scene.remove(this.cubes.shift())
     }
