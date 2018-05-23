@@ -365,7 +365,6 @@ Game.prototype = {
         self._updateCamera()
 
         if (self.successCallback) {
-          console.log("aud_success")
           var aud_success = document.getElementById('aud_success')
           aud_success.play()
           self.successCallback(self.score)
@@ -374,7 +373,6 @@ Game.prototype = {
         // 掉落失败，进入失败动画
         self._falling()
         //掉落音效
-        console.log("aud_failed")
         var aud_failed = document.getElementById('aud_failed')
         aud_failed.play()
       }
