@@ -506,7 +506,7 @@ Game.prototype = {
         z: this.cubes[this.cubes.length - 1].position.z
       }
       // 下一个方块的位置（修正）
-      var HeightBias = (this.cubeStat.heightBiasRec2 > 0)?((this.cubeStat.heightBiasRec2 /2)+0.5):0
+      var HeightBias = 0
       var pointX = {
         x: this.cubes[this.cubes.length - 1].position.x +HeightBias,
         z: this.cubes[this.cubes.length - 1].position.z +HeightBias
@@ -560,8 +560,8 @@ Game.prototype = {
         //result = distanceL < ((this.config.cubeWidth+this.cubeStat.heightBiasRec2 * 2) / 2) ? 1 : 10
         result = distanceX < ((this.config.cubeWidth) / 2) ? 1 : 10
         if (result == 1){
-            this.jumperStat.xBias=this.jumper.position.x-this.cubes[this.cubes.length - 1 ].position.x-this.cubeStat.heightBiasRec2 /2 -HeightBias/2
-            this.jumperStat.zBias=this.jumper.position.z-this.cubes[this.cubes.length - 1 ].position.z-this.cubeStat.heightBiasRec2 /2 -HeightBias/2
+            this.jumperStat.xBias=this.jumper.position.x-this.cubes[this.cubes.length - 1 ].position.x
+            this.jumperStat.zBias=this.jumper.position.z-this.cubes[this.cubes.length - 1 ].position.z
         }
       } else {
         result = 0

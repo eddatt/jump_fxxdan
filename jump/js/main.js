@@ -60,50 +60,50 @@ function failed(medal) {
 function success(score) {
   scoreCurrent.innerText = score
   //根据分数发放对应勋章
-  switch(score){
-      case level_1_score:
-        medal_pic.src = './imgs/medals/level_1_succ.jpg'
-        mask.style.display = 'flex'
-        info.style.display = 'none'
-        level_medal_pic = true
-        break;
-      case level_1_score + game.add_score*game.level_2_gap_num*1:
-        medal_pic.src = './imgs/medals/level_2_medal_1.jpg'
-        mask.style.display = 'flex'
-        info.style.display = 'none'
-        level_medal_pic = true
-        break;
-      case level_1_score + game.add_score*game.level_2_gap_num*2:
-        medal_pic.src = './imgs/medals/level_2_medal_2.jpg'
-        mask.style.display = 'flex'
-        info.style.display = 'none'
-        level_medal_pic = true
-        break;
-      case level_1_score + game.add_score*game.level_2_gap_num*3:
-        medal_pic.src = './imgs/medals/level_2_medal_3.jpg'
-        mask.style.display = 'flex'
-        info.style.display = 'none'
-        level_medal_pic = true
-        break;
-      case level_1_score + game.add_score*game.level_2_gap_num*4:
-        medal_pic.src = './imgs/medals/level_2_medal_4.jpg'
-        mask.style.display = 'flex'
-        info.style.display = 'none'
-        level_medal_pic = true
-        break;
-      case level_1_score + game.add_score*game.level_2_gap_num*5:
-        medal_pic.src = './imgs/medals/level_2_medal_5.jpg'
-        mask.style.display = 'flex'
-        info.style.display = 'none'
-        level_medal_pic = true
-        break;
-      case 114:
-        medal_pic.src = './imgs/medals/level_2_medal_113.jpg'
-        mask.style.display = 'flex'
-        info.style.display = 'none'
-        level_medal_pic = true
-        break;
-    }
+  // switch(score){
+      // case level_1_score:
+        // medal_pic.src = './imgs/medals/level_1_succ.jpg'
+        // mask.style.display = 'flex'
+        // info.style.display = 'none'
+        // level_medal_pic = true
+        // break;
+      // case level_1_score + game.add_score*game.level_2_gap_num*1:
+        // medal_pic.src = './imgs/medals/level_2_medal_1.jpg'
+        // mask.style.display = 'flex'
+        // info.style.display = 'none'
+        // level_medal_pic = true
+        // break;
+      // case level_1_score + game.add_score*game.level_2_gap_num*2:
+        // medal_pic.src = './imgs/medals/level_2_medal_2.jpg'
+        // mask.style.display = 'flex'
+        // info.style.display = 'none'
+        // level_medal_pic = true
+        // break;
+      // case level_1_score + game.add_score*game.level_2_gap_num*3:
+        // medal_pic.src = './imgs/medals/level_2_medal_3.jpg'
+        // mask.style.display = 'flex'
+        // info.style.display = 'none'
+        // level_medal_pic = true
+        // break;
+      // case level_1_score + game.add_score*game.level_2_gap_num*4:
+        // medal_pic.src = './imgs/medals/level_2_medal_4.jpg'
+        // mask.style.display = 'flex'
+        // info.style.display = 'none'
+        // level_medal_pic = true
+        // break;
+      // case level_1_score + game.add_score*game.level_2_gap_num*5:
+        // medal_pic.src = './imgs/medals/level_2_medal_5.jpg'
+        // mask.style.display = 'flex'
+        // info.style.display = 'none'
+        // level_medal_pic = true
+        // break;
+      // case 114:
+        // medal_pic.src = './imgs/medals/level_2_medal_113.jpg'
+        // mask.style.display = 'flex'
+        // info.style.display = 'none'
+        // level_medal_pic = true
+        // break;
+    // }
 }
 // 显示关于
 function show_about() {
