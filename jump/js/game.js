@@ -247,7 +247,7 @@ Game.prototype = {
     // 标记鼠标已经松开
     self.jumperStat.ready = true
     // 判断jumper是在底座水平面之上，是的话说明需要继续运动
-    if ((self.jumper.position.y >= self.config.cubeHeight +self.cubeStat.heightBiasRec1 -1) && self.jumperStat.ySpeed>=0) {
+    if ((self.jumper.position.y >= (self.config.cubeHeight +self.cubeStat.heightBiasRec1)/2) && self.jumperStat.ySpeed>=0) {
         //if (self.jumper.position.y >= self.config.cubeHeight[1]  -1) {
         // jumper根据下一个底座的位置来确定水平运动方向
         if (self.cubeStat.nextDir === 'left') {
@@ -299,7 +299,7 @@ Game.prototype = {
           self._handleMouseup()
         })
     } 
-    else if((self.jumper.position.y >= self.config.cubeHeight +self.cubeStat.heightBiasRec2 -1) && self.jumperStat.ySpeed < 0){
+    else if((self.jumper.position.y >= (self.config.cubeHeight +self.cubeStat.heightBiasRec2)/2) && self.jumperStat.ySpeed < 0){
         self.jumperStat.everReach = 1
         if (self.cubeStat.nextDir === 'left') {
           self.jumper.position.x -= self.jumperStat.xSpeed
@@ -353,8 +353,10 @@ Game.prototype = {
       //self.jumperStat.reach = 0
       self.jumper.rotation.x = 0
       self.jumper.rotation.z = 0
-      self.jumper.position.y = (self.cubeStat.heightBiasRec2>0) ? (self.config.cubeHeight +self.cubeStat.heightBiasRec2 -1):(self.config.cubeHeight +self.cubeStat.heightBiasRec2 -0.5)
+   //   self.jumper.position.y = (self.cubeStat.heightBiasRec2>0) ? (self.config.cubeHeight +self.cubeStat.heightBiasRec2 -1):(self.config.cubeHeight +self.cubeStat.heightBiasRec2 -0.5)
       //self.jumper.position.y = self.config.cubeHeight[1]  -1
+	  
+	  self.jumper.position.y = (self.config.cubeHeight +self.cubeStat.heightBiasRec2)/2
       self._checkInCube()
       self.jumperStat.everReach = 0
       //self._printContent()
@@ -632,7 +634,7 @@ Game.prototype = {
     this.jumper=new THREE.Group()
     this.jumper.add(mesh_s)
     this.jumper.add(mesh_c)
-    this.jumper.position.y=1
+    this.jumper.position.y=0.5
     this.scene.add(this.jumper)
   },
   // 底座样式控制
