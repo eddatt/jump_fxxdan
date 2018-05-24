@@ -650,15 +650,17 @@ Game.prototype = {
         this.cubeStat.cubeTextureIndex += 1
       }else{
         console.log("goto level 2")
-        this.cubeStat.cubeTextureIndex = 0
+        this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
+        this.cubeStat.cubeTextureIndex = Math.floor((this.buildings.length-3)*Math.random()) //过高建筑不出现
+        this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
+        this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
         this.cubeStat.gameLevel = 2
       }
     }else{
       //第二关，建筑随机出现
       console.log('level 2 cubeTextureIndex:'+this.cubeStat.cubeTextureIndex)
       this.cubeStat.heightBiasRec1 = this.cubeStat.heightBiasRec2
-
-      this.cubeStat.cubeTextureIndex = Math.floor(24*Math.random()) //过高建筑不出现
+      this.cubeStat.cubeTextureIndex = Math.floor((this.buildings.length-3)*Math.random()) //过高建筑不出现
       this.cubeStat.heightBiasRec2 = this.buildings[this.cubeStat.cubeTextureIndex]['floor'] - 2
       this.cubeStat.cubeTextureImg = this.buildings[this.cubeStat.cubeTextureIndex]['img']
       //////////原随机
